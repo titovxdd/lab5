@@ -1,0 +1,185 @@
+@startuml
+
+top to bottom direction
+skinparam linetype ortho
+
+
+
+
+class BandAsker {
+  + askBand(Console, Long): MusicBand
+  - askFrontMan(Console): Studio
+  - askCoordinates(Console): Coordinates
+}
+
+enum Color <<enum>>{
+    + RED
+    + BLACK
+    + BLUE
+    + YELLOW
+    + BROWN
+    + valueOf(String): MusicGenre
+    + list(): String
+    + values(): MusicGenre[]
+}
+
+class CommandParser {
+ +parse(String) Pair<Command, String arg>
+}
+
+class Context {
+  - Bands: Map<Long, MusicBand>
+  - id: Long
+  - collection: PriorityQueue<MusicBand>
+  + saveCollection(): void
+  + clear(): void
+  + add(MusicBand): boolean
+  + getBands(): Stack<MusicBand>
+  + removeById(Long): void
+  + sort(): void
+  + getFreeId(): Long
+  + getById(Long): MusicBand
+  + getCollection(): Stack<MusicBand>
+  + loadCollection(): Status
+  + removeFirst(): void
+}
+class Command {
+  - nameAndDescription: Pair<String, String>
+  # console: Console
+  + getDescription(): String
+  + getName(): String
+  + hashCode(): int
+  # execute(String): Status
+  + toString(): String
+  + equals(Object): boolean
+}
+class Commands {
+  - commands: Map<String, Command>
+  + getCommandsMap(): Map<String, Command>
+  + getCommand(String): Command
+  + register(String, Command): void
+}
+
+interface Console << interface >> {
+  + println(Object): void
+  + print(Object): void
+  + printError(Object): void
+  + readln(): String
+  + printTable(Object, Object): void
+}
+class Coordinates {
+  - x: double
+  - y: Integer
+  + toString(): String
+  + getY(): Integer
+  + equals(Object): boolean
+  + hashCode(): int
+  + getX(): double
+  + validate(): boolean
+}
+
+class Element {
+  + getID(): Long
+  + validate() boolean
+}
+
+
+class Executer {
+  - scriptStackCounter: int
+  - console: Console
+  + liveInput(): void
+  - runCommand(Pair<Command, String arg>): Status
+}
+class Status {
+  - status: Pair<Boolean, String>
+  + getMessage(): String
+  + isSuccess(): boolean
+}
+
+class FileConsole {
+  - input: java.util.Scanner
+  + printError(Object): void
+  + printTable(Object, Object): void
+  + print(Object): void
+  + println(Object): void
+  + readln(): String
+}
+
+class Main {
+  + main(String[]): void
+}
+class MusicBand {
+  - description: String
+  - frontMan: Person
+  - id: Long
+  - creationDate: java.util.Date
+  - singlesCount: Long
+  - name: String
+  - genre: MusicGenre
+  - numberOfParticipants: Long
+  - coordinates: Coordinates
+  + toString(): String
+  + toArray(MusicBand): String[]
+  + getNumberOfParticipants(): Long
+  + getCoordinates(): Coordinates
+  + hashCode(): int
+  + getID(): Long
+  + getCreationDate(): java.util.Date
+  + getGenre(): MusicGenre
+  + getSinglesCount(): Long
+  + equals(Object): boolean
+  + validate(): boolean
+  + fromArray(String[]): MusicBand
+  + getDescription(): String
+  + getFrontMan(): Studio
+  + compareTo(Element): int
+  + getName(): String
+}
+enum MusicGenre << enum >> {
+  + PSYCHEDELIC_ROCK
+  + POP
+  + MATH_ROCK
+  + PUNK_ROCK
+  + valueOf(String): MusicGenre
+  + list(): String
+  + values(): MusicGenre[]
+}
+class Pair<A, B> {
+  - a: A
+  - b: B
+  + setFirst(A): void
+  + getFirst(): A
+  + setSecond(B): void
+  + getSecond(): B
+}
+
+class StandartConsole {
+  + printTable(Object, Object): void
+  + println(Object): void
+  + print(Object): void
+  + printError(Object): void
+  + readln(): String
+}
+class Person {
+  - name: String
+  - eyeColor: Color
+  - birthday: java.time.LocalDate
+  + equals(Object): boolean
+  + toString(): String
+  + getEyeColor(): String
+  + getName(): String
+  + getBirthday(): java.time.LocalDate
+  + hashCode(): int
+}
+
+
+FileConsole  -[#008200,dashed]-^  Console
+FileConsole  -[#000000,plain]-^  CommandParser: Подают команды
+StandartConsole -[#000000,plain]-^  CommandParser
+MusicBand -[#000000,plain]-^  Element
+Executer -[#000000,plain]-^   Main :Запускает режим ввода команд
+StandartConsole -[#008200,dashed]-^  Console:Отвечают за считывание и вывод данных
+Executer  -[#000000,plain]-^ Context:Изменяет в результате работы команд
+CommandParser -[#000000,plain]-^ Commands:Ищет нужную команду
+Commands -[#000000,plain]-^ Executer:Выполняет команду
+@enduml
