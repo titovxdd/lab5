@@ -1,10 +1,11 @@
 package Commands;
 
+import sup.ArgParser;
 import sup.Console;
 import sup.Pair;
 import sup.Status;
 
-public abstract class Command {
+public abstract class Command implements ArgParser {
     private final Pair<String, String> nameAndDescription;
     protected Console console;
 
@@ -12,6 +13,7 @@ public abstract class Command {
         this.nameAndDescription = new Pair<>(name, description);
         this.console = console;
     }
+    public abstract Status parse(String arg);
 
     public String getName() {
         return nameAndDescription.getFirst();
