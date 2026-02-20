@@ -1,9 +1,12 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class MusicBand {
+public class MusicBand extends Element{
     private Long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name; //Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
@@ -14,7 +17,17 @@ public class MusicBand {
     private MusicGenre genre; //Поле может быть null
     private Person frontMan; //Поле не может быть null
 
-    public MusicBand(Long id, String name, LocalDate creationDate, Long numberOfParticipants, String description, Coordinates coordinates, Long singlesCount, MusicGenre genre, Person frontMan) {
+
+    @JsonCreator
+    public MusicBand( @JsonProperty("id") Long id,
+                      @JsonProperty("name") String name,
+                      @JsonProperty("creationDate") LocalDate creationDate,
+                      @JsonProperty("numberOfParticipants") Long numberOfParticipants,
+                      @JsonProperty("description") String description,
+                      @JsonProperty("coordinates") Coordinates coordinates,
+                      @JsonProperty("singlesCount") Long singlesCount,
+                      @JsonProperty("genre") MusicGenre genre,
+                      @JsonProperty("frontMan") Person frontMan) {
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
@@ -26,7 +39,7 @@ public class MusicBand {
         this.frontMan = frontMan;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -89,7 +102,9 @@ public class MusicBand {
                 ", frontMan=" + frontMan +
                 '}';
     }
-    public int compareTo(MusicBand o) {
+
+    @Override
+    public int compareTo(Element o) {
         return (int) (this.id - o.getId());
     }
 
@@ -123,7 +138,7 @@ public class MusicBand {
             singlesCount = Long.parseLong(array[6]);
             description = array[7];
             genre = MusicGenre.valueOf(array[8]);
-            frontMan = new Person(array[9], LocalDate.parse(array[11]), Color.valueOf(array[10]));
+            frontMan = new Person(array[9], LocalDate.parse(array[10]), Color.valueOf(array[11]));
         } catch (Exception e) {
             return null;
         }

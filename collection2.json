@@ -1,0 +1,18 @@
+[{
+  "id" : 12,
+  "name" : "BI",
+  "creationDate" : [ 2000, 10, 10 ],
+  "numberOfParticipants" : 3,
+  "description" : "FOFI",
+  "coordinates" : {
+    "x" : 12,
+    "y" : 3.0
+  },
+  "singlesCount" : 12,
+  "genre" : "POP",
+  "frontMan" : {
+    "name" : "BOB",
+    "birthday" : [ 1990, 10, 10 ],
+    "eyeColor" : "RED"
+  }
+}]

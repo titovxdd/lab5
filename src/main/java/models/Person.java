@@ -1,4 +1,7 @@
 package models;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -7,7 +10,11 @@ public class Person {
     private LocalDate birthday;
     private Color eyeColor;
 
-    public Person(String name, LocalDate birthday, Color eyeColor){
+
+    @JsonCreator
+    public Person(@JsonProperty("name") String name,
+                  @JsonProperty("birthday") LocalDate birthday,
+                  @JsonProperty("eyeColor") Color eyeColor) {
         this.name = name;
         this.birthday = birthday;
         this.eyeColor = eyeColor;

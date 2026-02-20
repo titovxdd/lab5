@@ -1,5 +1,8 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Objects;
 
 public class Coordinates {
@@ -7,7 +10,8 @@ public class Coordinates {
     private float y;
 
 
-    public Coordinates(Long x, float  y){
+    @JsonCreator
+    public Coordinates(@JsonProperty("x") Long x, @JsonProperty("y") float  y){
         this.x = x;
         this.y = y;
     }
