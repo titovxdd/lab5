@@ -26,7 +26,7 @@ public class Executer {
         }
     }
 
-    public void liveInput() {
+    public void interactiveMode() {
         try {
             while (true){
                 String[] args = (console.readln().trim() + " ").split(" ", 2);
