@@ -16,8 +16,12 @@ public class Executer {
             if (command == null){
                 return new Status(false, "Команда '" + args[0] + "' не найдена");
             } else {
-                console.println("Выполнение команды '" + args[0] + "'");
-                return command.execute(args[1]);
+                if (command.parse(args[1]).isSuccess()) {
+                    console.println("Выполнение команды '" + args[0] + "'");
+                    return command.execute(args[1]);
+                } else {
+                    return command.parse(args[1]);
+                }
             }
         }  catch (NullPointerException e) {
             return new Status(false, "Введено недостаточно аргументов для выполнения последней команды");

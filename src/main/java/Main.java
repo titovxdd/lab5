@@ -1,19 +1,50 @@
+import Commands.*;
+import managers.Commands;
+import managers.Context;
 import managers.DumpManager;
+import managers.Executer;
 import models.*;
 import sup.Console;
 import sup.FileConsole;
 import sup.StandartConsole;
+import sup.Status;
 
 import java.time.LocalDate;
 import java.util.PriorityQueue;
 
 public class Main {
     public static void main(String[] args) {
-        PriorityQueue<MusicBand> collection = new PriorityQueue<>();
-        DumpManager manager = new DumpManager("collection.json", new StandartConsole());
-        MusicBand band = new MusicBand(12L, "BI", LocalDate.parse("2000-10-10"), 3L, "FOFI", new Coordinates(12L, 3.0F), 12L, MusicGenre.POP, new Person("BOB", LocalDate.parse("1990-10-10"), Color.RED));
-        manager.ReadCollection(collection);
-        System.out.println(collection.toString());
+        var console = new StandartConsole();
+        String filePath = System.getenv("LAB5_FILE_PATH");
 
+        if (filePath == null) {
+            console.printError("Переменная окружения LAB5_FILE_PATH не найдена");
+            System.exit(1);
+        } else if (filePath.isEmpty()) {
+            console.printError("Переменная окружения LAB5_FILE_PATH не содержит пути к файлу");
+            System.exit(1);
+        } else if (!filePath.endsWith(".json")) {
+            console.printError("Файл должен быть формата .json");
+            System.exit(1);
+        } else if (!new java.io.File(filePath).exists()) {
+            console.printError("Файл по указанному пути не найден");
+            System.exit(1);
+        }
+        DumpManager dumpManager = new DumpManager(filePath, console);
+        Context context = new Context(dumpManager);
+        Status loadStatus = context.loadCollection();
+
+        if (!loadStatus.isSuccess()){
+            console.printError(loadStatus.getMessage());
+            System.exit(1);
+        }
+
+        Commands commandManager = new Commands() {{
+            register("help",new Help(console, this));
+            register("info",new Info(console, context));
+            register("show",new Show(console, context));
+            register("add",new Add(console, context));
+        }};
+        new Executer(console).interactiveMode();
     }
 }

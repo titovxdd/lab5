@@ -13,7 +13,9 @@ public abstract class Command implements ArgParser {
         this.nameAndDescription = new Pair<>(name, description);
         this.console = console;
     }
-    public abstract Status parse(String arg);
+    public Status parse(String arg){
+        return new Status(true, "Аргумент валиден");
+    }
 
     public String getName() {
         return nameAndDescription.getFirst();

@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class MusicBand extends Element{
     private Long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
-    private String name; //Поле не может быть null, Строка не может быть пустой
+    private String name;//Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null
     private LocalDate creationDate; //Поле не может быть null, Значение этого поля должно генерироваться автоматически
     private Long numberOfParticipants; //Значение поля должно быть больше 0

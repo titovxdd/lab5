@@ -9,13 +9,11 @@ import models.MusicBand;
 import sup.Console;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.AccessDeniedException;
+import java.nio.file.NoSuchFileException;
 import java.util.PriorityQueue;
-import java.util.Scanner;
 
 public class DumpManager {
     private final String fileName;
@@ -47,6 +45,10 @@ public class DumpManager {
             }
             writer.write("]".getBytes());
             writer.close();
+        } catch (AccessDeniedException e) {
+            System.err.println("Ошибка доступа: Недостаточно прав для работы с файлом");
+        } catch (NoSuchFileException e) {
+        System.err.println("Файл не найден");
         } catch (IOException e) {
             console.printError("Произошла ошибка при записи коллекции в файл");
         }
@@ -73,11 +75,14 @@ public class DumpManager {
             console.printError("Ошибка структуры JSON. Возможно файл поврежден: " + e.getMessage());
         } catch (JsonProcessingException e) {
             console.printError("Ошибка обработки JSON: " + e.getMessage());
+        } catch (NoSuchFileException e) {
+            System.err.println("Файл не найден: " + e.getFile());
+        } catch (AccessDeniedException e) {
+            console.printError("Ошибка доступа: Недостаточно прав для работы с файлом");
         } catch (IOException e) {
             console.printError("Ошибка чтения файла: " + e.getMessage());
         } catch (Exception e) {
-            console.printError("Неожиданная ошибка: " + e.getMessage());
-            e.printStackTrace();
+            console.printError(e.getMessage());
         }
     }
 }
