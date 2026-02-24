@@ -4,6 +4,7 @@ import models.MusicBand;
 import sup.Status;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
@@ -11,8 +12,8 @@ import java.util.TreeMap;
 public class Context {
     private final DumpManager dumpManager;
     private Long id;
-    private PriorityQueue<MusicBand> collection;
-    private Map<Long, MusicBand> bands;
+    private PriorityQueue<MusicBand> collection = new PriorityQueue<>();
+    private Map<Long, MusicBand>  bands = new HashMap<>();
     private LocalDateTime InitializationDate;
     private LocalDateTime lastSaveDate;
 
@@ -45,8 +46,12 @@ public class Context {
     }
 
     public Status loadCollection() {
-        collection.clear();
-        bands.clear();
+        if (collection != null){
+            collection.clear();
+        }
+        if (bands != null){
+            bands.clear();
+        }
         dumpManager.ReadCollection(collection);
         InitializationDate = LocalDateTime.now();
         lastSaveDate = LocalDateTime.now();
@@ -74,7 +79,9 @@ public class Context {
         return id;
     }
     public void clear() {
-        collection.clear();
+        if (collection != null){
+            collection.clear();
+        }
         bands.clear();
     }
 

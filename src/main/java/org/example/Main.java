@@ -1,16 +1,13 @@
+package org.example;
+
 import Commands.*;
 import managers.Commands;
 import managers.Context;
 import managers.DumpManager;
 import managers.Executer;
-import models.*;
-import sup.Console;
-import sup.FileConsole;
 import sup.StandartConsole;
 import sup.Status;
 
-import java.time.LocalDate;
-import java.util.PriorityQueue;
 
 public class Main {
     public static void main(String[] args) {
