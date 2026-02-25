@@ -1,182 +1,154 @@
-[
-  {
-    "id": 1,
-    "name": "Tame Impala",
-    "coordinates": {
-      "x": 215,
-      "y": 115.5
-    },
-    "creationDate": "2026-02-15T10:30:00",
-    "numberOfParticipants": 4,
-    "singlesCount": 28,
-    "description": "Психоделический рок проект Кевина Паркера",
-    "genre": "PSYCHEDELIC_ROCK",
-    "frontMan": {
-      "name": "Kevin Parker",
-      "birthday": "1986-01-20",
-      "eyeColor": "BROWN"
-    }
+[{
+  "id" : 1,
+  "name" : "Tame Impala",
+  "creationDate" : [ 2026, 2, 15 ],
+  "numberOfParticipants" : 4,
+  "description" : "Психоделический рок проект Кевина Паркера",
+  "coordinates" : {
+    "x" : 215,
+    "y" : 115.5
   },
-  {
-    "id": 2,
-    "name": "Twenty One Pilots",
-    "coordinates": {
-      "x": 350,
-      "y": 78.3
-    },
-    "creationDate": "2026-02-16T14:45:00",
-    "numberOfParticipants": 2,
-    "singlesCount": 42,
-    "description": "Американский дуэт из Огайо",
-    "genre": "POP",
-    "frontMan": {
-      "name": "Tyler Joseph",
-      "birthday": "1988-12-01",
-      "eyeColor": "BROWN"
-    }
-  },
-  {
-    "id": 3,
-    "name": "American Football",
-    "coordinates": {
-      "x": 120,
-      "y": 40.2
-    },
-    "creationDate": "2026-02-17T09:15:00",
-    "numberOfParticipants": 3,
-    "singlesCount": 15,
-    "description": "Основоположники мат-рока",
-    "genre": "MATH_ROCK",
-    "frontMan": {
-      "name": "Mike Kinsella",
-      "birthday": "1977-03-04",
-      "eyeColor": "BLUE"
-    }
-  },
-  {
-    "id": 4,
-    "name": "Green Day",
-    "coordinates": {
-      "x": 275,
-      "y": 37.8
-    },
-    "creationDate": "2026-02-18T11:20:00",
-    "numberOfParticipants": 3,
-    "singlesCount": 56,
-    "description": "Легендарная панк-рок группа",
-    "genre": "PUNK_ROCK",
-    "frontMan": {
-      "name": "Billie Joe Armstrong",
-      "birthday": "1972-02-17",
-      "eyeColor": "RED"
-    }
-  },
-  {
-    "id": 5,
-    "name": "MGMT",
-    "coordinates": {
-      "x": 400,
-      "y": 41.3
-    },
-    "creationDate": "2026-02-19T16:30:00",
-    "numberOfParticipants": 2,
-    "singlesCount": 31,
-    "description": "Электронный поп-дуэт",
-    "genre": "POP",
-    "frontMan": {
-      "name": "Andrew VanWyngarden",
-      "birthday": "1983-02-01",
-      "eyeColor": "BLUE"
-    }
-  },
-  {
-    "id": 6,
-    "name": "King Gizzard & The Lizard Wizard",
-    "coordinates": {
-      "x": 50,
-      "y": -37.8
-    },
-    "creationDate": "2026-02-20T08:45:00",
-    "numberOfParticipants": 7,
-    "singlesCount": 68,
-    "description": "Австралийская психоделическая группа",
-    "genre": "PSYCHEDELIC_ROCK",
-    "frontMan": {
-      "name": "Stu Mackenzie",
-      "birthday": "1991-07-18",
-      "eyeColor": "BROWN"
-    }
-  },
-  {
-    "id": 7,
-    "name": "Don Caballero",
-    "coordinates": {
-      "x": 180,
-      "y": 40.4
-    },
-    "creationDate": "2026-02-21T13:10:00",
-    "numberOfParticipants": 4,
-    "singlesCount": 22,
-    "description": "Инструментальный мат-рок",
-    "genre": "MATH_ROCK",
-    "frontMan": {
-      "name": "Damon Che",
-      "birthday": "1968-10-28",
-      "eyeColor": "BLACK"
-    }
-  },
-  {
-    "id": 8,
-    "name": "The Clash",
-    "coordinates": {
-      "x": 310,
-      "y": 51.5
-    },
-    "creationDate": "2026-02-22T10:00:00",
-    "numberOfParticipants": 4,
-    "singlesCount": 47,
-    "description": "bb",
-    "genre": "PUNK_ROCK",
-    "frontMan": {
-      "name": "Joe Strummer",
-      "birthday": "1952-08-21",
-      "eyeColor": "BROWN"
-    }
-  },
-  {
-    "id": 9,
-    "name": "CHVRCHES",
-    "coordinates": {
-      "x": 95,
-      "y": 55.9
-    },
-    "creationDate": "2026-02-23T15:20:00",
-    "numberOfParticipants": 3,
-    "singlesCount": 34,
-    "description": "Шотландская синти-поп группа",
-    "genre": "POP",
-    "frontMan": {
-      "name": "Lauren Mayberry",
-      "birthday": "1987-10-07",
-      "eyeColor": "BLUE"
-    }
-  },
-  {
-    "id": 10,
-    "name": "Battles",
-    "coordinates": {
-      "x": 290,
-      "y": 40.7
-    },
-    "creationDate": "2026-02-24T12:30:00",
-    "numberOfParticipants": 3,
-    "singlesCount": 19,
-    "description": "Экспериментальный мат-рок",
-    "genre": "MATH_ROCK",
-    "frontMan": {
-      "name": "Ian Williams",
-      "birthday": "1970-08-29",
-      "eyeColor": "BROWN"
-    }
+  "singlesCount" : 28,
+  "genre" : "PSYCHEDELIC_ROCK",
+  "frontMan" : {
+    "name" : "Kevin Parker",
+    "birthday" : [ 1986, 1, 20 ],
+    "eyeColor" : "BROWN"
   }
-]
+},{
+  "id" : 4,
+  "name" : "Green Day",
+  "creationDate" : [ 2026, 2, 18 ],
+  "numberOfParticipants" : 3,
+  "description" : "Легендарная панк-рок группа",
+  "coordinates" : {
+    "x" : 275,
+    "y" : 37.8
+  },
+  "singlesCount" : 56,
+  "genre" : "PUNK_ROCK",
+  "frontMan" : {
+    "name" : "Billie Joe Armstrong",
+    "birthday" : [ 1972, 2, 17 ],
+    "eyeColor" : "RED"
+  }
+},{
+  "id" : 3,
+  "name" : "American Football",
+  "creationDate" : [ 2026, 2, 17 ],
+  "numberOfParticipants" : 3,
+  "description" : "Основоположники мат-рока",
+  "coordinates" : {
+    "x" : 120,
+    "y" : 40.2
+  },
+  "singlesCount" : 15,
+  "genre" : "MATH_ROCK",
+  "frontMan" : {
+    "name" : "Mike Kinsella",
+    "birthday" : [ 1977, 3, 4 ],
+    "eyeColor" : "BLUE"
+  }
+},{
+  "id" : 8,
+  "name" : "The Clash",
+  "creationDate" : [ 2026, 2, 22 ],
+  "numberOfParticipants" : 4,
+  "description" : "bb",
+  "coordinates" : {
+    "x" : 310,
+    "y" : 51.5
+  },
+  "singlesCount" : 47,
+  "genre" : "PUNK_ROCK",
+  "frontMan" : {
+    "name" : "Joe Strummer",
+    "birthday" : [ 1952, 8, 21 ],
+    "eyeColor" : "BROWN"
+  }
+},{
+  "id" : 5,
+  "name" : "MGMT",
+  "creationDate" : [ 2026, 2, 19 ],
+  "numberOfParticipants" : 2,
+  "description" : "Электронный поп-дуэт",
+  "coordinates" : {
+    "x" : 400,
+    "y" : 41.3
+  },
+  "singlesCount" : 31,
+  "genre" : "POP",
+  "frontMan" : {
+    "name" : "Andrew VanWyngarden",
+    "birthday" : [ 1983, 2, 1 ],
+    "eyeColor" : "BLUE"
+  }
+},{
+  "id" : 6,
+  "name" : "King Gizzard & The Lizard Wizard",
+  "creationDate" : [ 2026, 2, 20 ],
+  "numberOfParticipants" : 7,
+  "description" : "Австралийская психоделическая группа",
+  "coordinates" : {
+    "x" : 50,
+    "y" : -37.8
+  },
+  "singlesCount" : 68,
+  "genre" : "PSYCHEDELIC_ROCK",
+  "frontMan" : {
+    "name" : "Stu Mackenzie",
+    "birthday" : [ 1991, 7, 18 ],
+    "eyeColor" : "BROWN"
+  }
+},{
+  "id" : 7,
+  "name" : "Don Caballero",
+  "creationDate" : [ 2026, 2, 21 ],
+  "numberOfParticipants" : 4,
+  "description" : "Инструментальный мат-рок",
+  "coordinates" : {
+    "x" : 180,
+    "y" : 40.4
+  },
+  "singlesCount" : 22,
+  "genre" : "MATH_ROCK",
+  "frontMan" : {
+    "name" : "Damon Che",
+    "birthday" : [ 1968, 10, 28 ],
+    "eyeColor" : "BLACK"
+  }
+},{
+  "id" : 10,
+  "name" : "Battles",
+  "creationDate" : [ 2026, 2, 24 ],
+  "numberOfParticipants" : 3,
+  "description" : "Экспериментальный мат-рок",
+  "coordinates" : {
+    "x" : 290,
+    "y" : 40.7
+  },
+  "singlesCount" : 19,
+  "genre" : "MATH_ROCK",
+  "frontMan" : {
+    "name" : "Ian Williams",
+    "birthday" : [ 1970, 8, 29 ],
+    "eyeColor" : "BROWN"
+  }
+},{
+  "id" : 9,
+  "name" : "CHVRCHES",
+  "creationDate" : [ 2026, 2, 23 ],
+  "numberOfParticipants" : 3,
+  "description" : "Шотландская синти-поп группа",
+  "coordinates" : {
+    "x" : 95,
+    "y" : 55.9
+  },
+  "singlesCount" : 34,
+  "genre" : "POP",
+  "frontMan" : {
+    "name" : "Lauren Mayberry",
+    "birthday" : [ 1987, 10, 7 ],
+    "eyeColor" : "BLUE"
+  }
+}]

@@ -44,6 +44,16 @@ public class Main {
             register("show",new Show(console, context));
             register("add",new Add(console, context));
             register("exit", new Exit(console));
+            register("head", new Head(console, context));
+            register("add_if_min", new AddIfMin(console, context));
+            register("add_if_max", new AddIfMax(console, context));
+            register("count_less_than_description", new CountLessThanDescription(console, context));
+            register("filter_greater_than_genre", new FilterGreaterThanGenre(console, context));
+            register("remove_by_id", new RemoveById(console, context));
+            register("update", new Update(console, context));
+            register("save", new Save(console, context));
+            register("clear", new Clear(console, context));
+            register("filter_contains_name", new FilterContainsName(console, context));
         }};
         new Executer(console).interactiveMode();
     }

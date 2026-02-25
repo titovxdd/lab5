@@ -19,10 +19,10 @@ public class Info extends Command{
 
     @Override
     public Status execute(String arg){
-        console.println("Тип коллекции: " + context.getBands().getClass().getName());
+        console.println("Тип коллекции: " + context.getCollection().getClass().getName());
         console.println("Дата инициализации: " + context.getInitializationDate());
         console.println("Дата последнего сохранения: " + context.getLastSaveDate());
-        console.println("Количество элементов: " + context.getBands().size());
+        console.println("Количество элементов: " + context.getCollection().size());
         return new Status(true, "Информация о коллекции успешно выведена");
     }
 }

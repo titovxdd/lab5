@@ -18,8 +18,4 @@ public class Clear extends Command {
         return new Status(true, "Коллекция успешно очищена");
     }
 
-    @Override
-    public Status parse(String arg){
-        return new Status(true, " ");
-    }
 }

@@ -21,9 +21,6 @@ public class Context {
         this.dumpManager = dumpManager;
     }
 
-    public PriorityQueue<MusicBand> getBands() {
-        return collection;
-    }
 
     public void sort() {
         PriorityQueue<MusicBand> sortedBands = new PriorityQueue<>();

@@ -1,6 +1,7 @@
 package Commands;
 
 import managers.Context;
+import models.MusicBand;
 import sup.Console;
 import sup.Status;
 
@@ -18,7 +19,9 @@ public class Show extends Command {
         if (context.getCollection().isEmpty()) {
             console.println("Коллекция пуста");
         }
-        context.getCollection().forEach(band -> console.println(band.toString()));
+        for (MusicBand band : context.getCollection()) {
+            console.println(band.toString());
+        }
         return new Status(true, "Вывод всех элементов коллекции успешно завершен");
     }
 }
