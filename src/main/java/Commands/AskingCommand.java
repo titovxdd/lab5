@@ -21,16 +21,7 @@ public abstract class AskingCommand extends Command{
     public Status execute(String arg){
         Long id;
         IdValidator validator = new IdValidator(context);
-        if (arg.equals(" ")){
-            id = Long.parseLong(arg);
-            Pair<Status, MusicBand> validationStatusPair = parseBand(console, id);
-            if (!validationStatusPair.getFirst().isSuccess()) {
-                return validationStatusPair.getFirst();
-            } else {
-                return execute(validationStatusPair.getSecond());
-            }
-
-        } else if (validator.validate(arg).isSuccess()) {
+        if (validator.validate(arg).isSuccess()) {
             id = Long.parseLong(arg);
             Pair<Status, MusicBand> validationStatusPair = parseBand(console, id);
             if (!validationStatusPair.getFirst().isSuccess()) {
@@ -39,7 +30,14 @@ public abstract class AskingCommand extends Command{
                 return execute(validationStatusPair.getSecond());
             }
         } else {
-            return new Status(false, "Введен неверный аргумент");
+            id = context.getFreeId();
+            Pair<Status, MusicBand> validationStatusPair = parseBand(console, id);
+            if (!validationStatusPair.getFirst().isSuccess()) {
+                return validationStatusPair.getFirst();
+            } else {
+                return execute(validationStatusPair.getSecond());
+            }
+
         }
     }
 
@@ -50,11 +48,11 @@ public abstract class AskingCommand extends Command{
         try {
             MusicBand band = BandAsker.askBand(console, id);
             if (band != null && band.validate()) {
-                return new Pair<>(new Status(true, "Элемент введён корректно!"), band);
+                return new Pair<>(new Status(true, "Элемент введён корректно"), band);
             }
-            return new Pair<>(new Status(false, "Введены некорректные данные!"), null);
+            return new Pair<>(new Status(false, "Введены некорректные данные"), null);
         } catch (BandAsker.Breaker e) {
-            return new Pair<>(new Status(false, "Ввод был прерван пользователем!"), null);
+            return new Pair<>(new Status(false, "Ввод был прерван пользователем"), null);
         } catch (BandAsker.IllegalInputException e) {
             return new Pair<>(new Status(false, e.getMessage()), null);
         }

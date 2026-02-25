@@ -11,7 +11,7 @@ import java.util.TreeMap;
 
 public class Context {
     private final DumpManager dumpManager;
-    private Long id;
+    private Long id = 1L;
     private PriorityQueue<MusicBand> collection = new PriorityQueue<>();
     private Map<Long, MusicBand>  bands = new HashMap<>();
     private LocalDateTime InitializationDate;

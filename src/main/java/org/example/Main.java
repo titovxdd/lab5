@@ -5,6 +5,7 @@ import managers.Commands;
 import managers.Context;
 import managers.DumpManager;
 import managers.Executer;
+import sup.IdValidator;
 import sup.StandartConsole;
 import sup.Status;
 
@@ -31,6 +32,7 @@ public class Main {
         Context context = new Context(dumpManager);
         Status loadStatus = context.loadCollection();
 
+
         if (!loadStatus.isSuccess()){
             console.printError(loadStatus.getMessage());
             System.exit(1);
@@ -41,6 +43,7 @@ public class Main {
             register("info",new Info(console, context));
             register("show",new Show(console, context));
             register("add",new Add(console, context));
+            register("exit", new Exit(console));
         }};
         new Executer(console).interactiveMode();
     }

@@ -20,7 +20,7 @@ public class BandAsker {
     }
 
     private static Person askPerson(Console console) throws Breaker {
-        console.println("Ввод значений поля Studio...");
+        console.println("Ввод значений поля Person");
         String name;
         do {
             console.println("Введите значение поля name:");
@@ -31,6 +31,11 @@ public class BandAsker {
         } while (name.isEmpty());
         LocalDate birthday = null;
         do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             console.println("Введите значение поля birthday:");
             String br = console.readln();
             if (br.equals("exit")){
@@ -42,8 +47,7 @@ public class BandAsker {
                     if (console instanceof FileConsole){
                         throw new IllegalInputException("Неверный формат даты");
                     }
-                    console.printError("Неверный формат даты: " + br);
-                    console.printError("Верный формат: yyyy-mm-dd (например, 2022-12-22)");
+                    console.printError("Неверный формат даты: " + br + "\nВерный формат: yyyy-mm-dd (например, 2022-12-22)");
                 } catch (IllegalArgumentException e) {
                     console.printError(e.getMessage());
                 }
@@ -52,6 +56,11 @@ public class BandAsker {
         } while (birthday == null);
         Color eyeColor = null;
         do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             console.println("Введите значение поля eyeColor:");
             console.println("Список возможных значений: " + Color.list());
             String input = console.readln();
@@ -76,6 +85,11 @@ public class BandAsker {
         console.println("Ввод значений поля Coordinates:");
         Long x;
         do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             console.println("Введите значение поля x:");
             try {
                 String input = console.readln();
@@ -89,14 +103,19 @@ public class BandAsker {
             }
             if (x > 432L) {
                 if (console instanceof FileConsole){
-                    throw new IllegalInputException("Некорректное значение поля x!\nЗначение поля должно быть меньше 433");
+                    throw new IllegalInputException("Некорректное значение поля x\nЗначение поля должно быть меньше 433");
                 }
-                console.printError("Некорректное значение поля x!\nЗначение поля должно быть меньше 433");
+                console.printError("Некорректное значение поля x\nЗначение поля должно быть меньше 433");
             }
         } while (x > 432);
 
-        Float y;
+        Float y = null;
         do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             console.println("Введите значение поля y:");
             try {
                 String input = console.readln();
@@ -108,7 +127,7 @@ public class BandAsker {
             } catch (NumberFormatException e) {
                 y = null;
             }
-        } while (y == 0);
+        } while (y == null);
 
         console.println("Значения поля Coordinates записаны");
         return new Coordinates(x, y);
@@ -128,6 +147,11 @@ public class BandAsker {
 
         Long numberOfParticipants = -1L;
         do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             console.println("Введите значение поля numberOfParticipants:");
             try {
                 String input = console.readln();
@@ -141,15 +165,20 @@ public class BandAsker {
             }
             if (numberOfParticipants <= 0) {
                 if (console instanceof FileConsole){
-                    throw new IllegalInputException("Некорректное значение поля numberOfParticipants!\nЗначение поля должно быть больше 0");
+                    throw new IllegalInputException("Некорректное значение поля numberOfParticipants\nЗначение поля должно быть больше 0");
                 }
-                console.printError("Некорректное значение поля numberOfParticipants!\nЗначение поля должно быть больше 0");
+                console.printError("Некорректное значение поля numberOfParticipants\nЗначение поля должно быть больше 0");
             }
         } while (numberOfParticipants <= 0);
 
         Long singlesCount = -1L;
         do {
-            console.println("Введите значение поля albumsCount:");
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            console.println("Введите значение поля singlesCount:");
             try {
                 String input = console.readln();
                 if (input.equals("exit")) {
@@ -162,9 +191,9 @@ public class BandAsker {
             }
             if (singlesCount <= 0) {
                 if (console instanceof FileConsole){
-                    throw new IllegalInputException("Некорректное значение поля singlesCount!\nЗначение поля должно быть больше 0");
+                    throw new IllegalInputException("Некорректное значение поля singlesCount\nЗначение поля должно быть больше 0");
                 }
-                console.printError("Некорректное значение поля singlesCount!\nЗначение поля должно быть больше 0");
+                console.printError("Некорректное значение поля singlesCount\nЗначение поля должно быть больше 0");
             }
         } while (singlesCount <= 0);
 
@@ -179,6 +208,11 @@ public class BandAsker {
 
         MusicGenre genre = null;
         do {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
             console.println("Введите значение поля genre:");
             console.println("Список возможных значений: " + MusicGenre.list());
             String input = console.readln();
@@ -189,16 +223,20 @@ public class BandAsker {
                     genre = MusicGenre.valueOf(input);
                 } catch (IllegalArgumentException e) {
                     if (console instanceof FileConsole){
-                        throw new IllegalArgumentException("Некорректное значение поля genre!");
+                        throw new IllegalArgumentException("Некорректное значение поля genre");
                     }
-                    console.printError("Некорректное значение поля genre!");
+                    console.printError("Некорректное значение поля genre");
                 }
             }
         } while (genre == null);
 
         Person person = askPerson(console);
 
-        return new MusicBand(id, name, LocalDate.now(), numberOfParticipants, description, coordinates, singlesCount, genre, person);
+        MusicBand band = new MusicBand(id, name, LocalDate.now(), numberOfParticipants, description, coordinates, singlesCount, genre, person);
+        if (band == null || !(band.validate())){
+            System.out.println(band.toString());
+        }
+        return band;
     }
 
 }
