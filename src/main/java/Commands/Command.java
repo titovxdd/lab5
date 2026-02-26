@@ -17,6 +17,10 @@ public abstract class Command implements ArgParser {
         return new Status(true, "Аргумент валиден");
     }
 
+    public void updateConsole(Console console) {
+        this.console = console;
+    }
+
     public String getName() {
         return nameAndDescription.getFirst();
     }

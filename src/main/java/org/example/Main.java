@@ -38,6 +38,7 @@ public class Main {
             System.exit(1);
         }
 
+        Executer executer = new Executer(console);
         Commands commandManager = new Commands() {{
             register("help",new Help(console, this));
             register("info",new Info(console, context));
@@ -54,7 +55,8 @@ public class Main {
             register("save", new Save(console, context));
             register("clear", new Clear(console, context));
             register("filter_contains_name", new FilterContainsName(console, context));
+            register("execute_script", new ExecuteScript(console, executer));
         }};
-        new Executer(console).interactiveMode();
+        executer.interactiveMode();
     }
 }

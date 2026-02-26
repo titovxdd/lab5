@@ -5,6 +5,7 @@ import sup.Status;
 
 public class Executer {
     private Console console;
+    public int scriptStackCounter = 0;
 
     public Executer(Console console){
         this.console = console;

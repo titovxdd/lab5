@@ -2,11 +2,12 @@ package sup;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Scanner;
 
 public class FileConsole implements Console {
-    private final BufferedReader input;
+    private final Scanner input;
 
-    public FileConsole(BufferedReader input) {
+    public FileConsole(Scanner input) {
         this.input = input;
     }
 
@@ -29,10 +30,6 @@ public class FileConsole implements Console {
 
     @Override
     public String readln() {
-        try {
-            return input.readLine();
-        } catch (IOException e) {
-            throw new IllegalArgumentException(e);
-        }
+        return input.nextLine();
     }
 }

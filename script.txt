@@ -1,0 +1,16 @@
+help
+show
+add
+asd
+2
+2
+20
+5
+burmalda
+POP
+kokhhh
+2000-10-10
+RED
+filter_greater_than_genre POP
+execute_script script.txt
+exit
