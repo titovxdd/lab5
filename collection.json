@@ -16,20 +16,20 @@
     "eyeColor" : "BROWN"
   }
 },{
-  "id" : 4,
-  "name" : "Green Day",
-  "creationDate" : [ 2026, 2, 18 ],
-  "numberOfParticipants" : 3,
-  "description" : "Легендарная панк-рок группа",
+  "id" : 2,
+  "name" : "ne",
+  "creationDate" : [ 2026, 3, 6 ],
+  "numberOfParticipants" : 1,
+  "description" : "c,wec",
   "coordinates" : {
-    "x" : 275,
-    "y" : 37.8
+    "x" : 289,
+    "y" : 2.0
   },
-  "singlesCount" : 56,
-  "genre" : "PUNK_ROCK",
+  "singlesCount" : 1,
+  "genre" : "POP",
   "frontMan" : {
-    "name" : "Billie Joe Armstrong",
-    "birthday" : [ 1972, 2, 17 ],
+    "name" : "namb",
+    "birthday" : [ 2000, 10, 10 ],
     "eyeColor" : "RED"
   }
 },{
@@ -67,21 +67,21 @@
     "eyeColor" : "BROWN"
   }
 },{
-  "id" : 5,
-  "name" : "MGMT",
-  "creationDate" : [ 2026, 2, 19 ],
-  "numberOfParticipants" : 2,
-  "description" : "Электронный поп-дуэт",
+  "id" : 4,
+  "name" : "Green Day",
+  "creationDate" : [ 2026, 2, 18 ],
+  "numberOfParticipants" : 3,
+  "description" : "Легендарная панк-рок группа",
   "coordinates" : {
-    "x" : 400,
-    "y" : 41.3
+    "x" : 275,
+    "y" : 37.8
   },
-  "singlesCount" : 31,
-  "genre" : "POP",
+  "singlesCount" : 56,
+  "genre" : "PUNK_ROCK",
   "frontMan" : {
-    "name" : "Andrew VanWyngarden",
-    "birthday" : [ 1983, 2, 1 ],
-    "eyeColor" : "BLUE"
+    "name" : "Billie Joe Armstrong",
+    "birthday" : [ 1972, 2, 17 ],
+    "eyeColor" : "RED"
   }
 },{
   "id" : 6,
@@ -149,6 +149,23 @@
   "frontMan" : {
     "name" : "Lauren Mayberry",
     "birthday" : [ 1987, 10, 7 ],
+    "eyeColor" : "BLUE"
+  }
+},{
+  "id" : 5,
+  "name" : "MGMT",
+  "creationDate" : [ 2026, 2, 19 ],
+  "numberOfParticipants" : 2,
+  "description" : "Электронный поп-дуэт",
+  "coordinates" : {
+    "x" : 400,
+    "y" : 41.3
+  },
+  "singlesCount" : 31,
+  "genre" : "POP",
+  "frontMan" : {
+    "name" : "Andrew VanWyngarden",
+    "birthday" : [ 1983, 2, 1 ],
     "eyeColor" : "BLUE"
   }
 }]
