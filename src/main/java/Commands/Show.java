@@ -21,6 +21,7 @@ public class Show extends Command {
         }
         for (MusicBand band : context.getCollection()) {
             console.println(band.toString());
+            console.println("");
         }
         return new Status(true, "Вывод всех элементов коллекции успешно завершен");
     }

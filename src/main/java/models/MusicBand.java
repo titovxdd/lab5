@@ -90,17 +90,24 @@ public class MusicBand extends Element{
 
     @Override
     public String toString() {
-        return '{' +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", coordinates=" + coordinates +
-                ", creationDate=" + creationDate +
-                ", numberOfParticipants=" + numberOfParticipants +
-                ", singlesCount=" + singlesCount +
-                ", description='" + description + '\'' +
-                ", genre=" + genre +
-                ", frontMan=" + frontMan +
-                '}';
+        return String.format(
+                "%-20s: %-30s \n" +
+                        "%-20s: %-30s \n" +
+                        "%-20s: %-30s\n" +
+                        "%-20s: %-30s\n" +
+                        "%-20s: %-30s\n" +
+                        "%-20s: %-30s\n" +
+                        "%-20s: %-30s\n" +
+                        "%-20s: %-30s",
+                "Название", name,
+                "Координаты", coordinates,
+                "Дата создания", creationDate,
+                "Участников", numberOfParticipants,
+                "Синглов", singlesCount,
+                "Описание", description,
+                "Жанр", genre,
+                "Фронтмен",frontMan
+        );
     }
 
     @Override

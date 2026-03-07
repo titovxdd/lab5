@@ -126,6 +126,7 @@ public class BandAsker {
                 }
             } catch (NumberFormatException e) {
                 y = null;
+                console.printError("Некорректный формат\nОжидаемый формат: 5.5 или 5");
             }
         } while (y == null);
 
