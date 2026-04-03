@@ -1,17 +1,18 @@
 package com.lab6.common.Sup;
 
-import sup.ExecutionStatus;
+import com.lab6.common.validators.ArgumentValidator;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Map;
 
 public class Response implements Serializable {
     @Serial
     private static final long serialVersionUID = 2L;
-    private Map<String, Pair<, Boolean>> commandsData; // Второе значение - true, если команда требует ввода элемента коллекции
+    private Map<String, Pair<ArgumentValidator, Boolean>> commandsData; // Второе значение - true, если команда требует ввода элемента коллекции
     private ExecutionStatus executionStatus;
 
-    public Response(Map<String, Pair<, Boolean>> commandsData) {
+    public Response(Map<String, Pair<ArgumentValidator, Boolean>> commandsData) {
         this.commandsData = commandsData;
     }
 
@@ -23,7 +24,7 @@ public class Response implements Serializable {
         return executionStatus;
     }
 
-    public Map<String, Pair<, Boolean>> getCommandsMap() {
+    public Map<String, Pair<ArgumentValidator, Boolean>> getCommandsMap() {
         return commandsData;
     }
 

@@ -1,13 +1,11 @@
-package managers;
+package com.lab6.client.managers;
 
-import models.*;
-import sup.Console;
-import sup.FileConsole;
+import com.lab6.common.models.*;
+import com.lab6.client.sup.Console;
+import com.lab6.client.sup.FileConsole;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
-import java.util.Objects;
 
 public class BandAsker {
 

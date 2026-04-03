@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import com.lab6.server.Commands.Command;
 
-public class Commands {
+public class CommandManager {
     private static Map<String, Command> commands = new HashMap<>();
 
     public static void register(String commandName, Command command) {

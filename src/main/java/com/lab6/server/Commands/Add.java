@@ -1,14 +1,15 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
-import models.MusicBand;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicBand;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class Add extends AskingCommand{
 
-    public Add(Console console, CollectionManager collectionManager){
-        super("add", "добавить новый элемент в коллекцию", console, collectionManager);
+    public Add(){
+        super("add", "добавить новый элемент в коллекцию", new EmptyValidator());
     }
 
     @Override

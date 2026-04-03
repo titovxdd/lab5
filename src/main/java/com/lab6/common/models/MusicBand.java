@@ -1,4 +1,4 @@
-package models;
+package com.lab6.common.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -73,6 +73,10 @@ public class MusicBand extends Element{
 
     public String getDescription() {
         return description;
+    }
+
+    public void updateId(Long id) {
+        this.id = id;
     }
 
     @Override

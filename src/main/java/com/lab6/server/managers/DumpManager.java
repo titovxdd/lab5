@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import models.MusicBand;
-import sup.Console;
+import com.lab6.server.Server;
+import com.lab6.common.models.MusicBand;
+import com.lab6.common.Sup.ExecutionStatus;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,17 +17,40 @@ import java.nio.file.NoSuchFileException;
 import java.util.PriorityQueue;
 
 public class DumpManager {
-    private final String fileName;
-    private final Console console;
+    private final String filePath;
+    private static volatile DumpManager instance;
 
-    public DumpManager(String fileName, Console console){
-        this.fileName = fileName;
-        this.console = console;
+    private DumpManager() {
+        this.filePath = System.getenv("LAB5_FILE_PATH");
+        if (filePath == null) {
+            Server.logger.severe("Environment variable LAB5_FILE_PATH not found!");
+            System.exit(1);
+        } else if (filePath.isEmpty()) {
+            Server.logger.severe("Environment variable LAB5_FILE_PATH does not contain a file path!");
+            System.exit(1);
+        } else if (!filePath.endsWith(".csv")) {
+            Server.logger.severe("The file must be in .csv format!");
+            System.exit(1);
+        } else if (!new File(filePath).exists()) {
+            Server.logger.severe("The file at the specified path was not found!");
+            System.exit(1);
+        }
     }
 
-    public void WriteCollection(PriorityQueue<MusicBand> collection){
+    public static DumpManager getInstance() {
+        if (instance == null) {
+            synchronized (DumpManager.class) {
+                if (instance == null) {
+                    instance = new DumpManager();
+                }
+            }
+        }
+        return instance;
+    }
+
+    public ExecutionStatus WriteCollection(PriorityQueue<MusicBand> collection){
         try {
-            FileOutputStream writer = new FileOutputStream(fileName);
+            FileOutputStream writer = new FileOutputStream(filePath);
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
             mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -40,49 +64,50 @@ public class DumpManager {
                     writer.write(mapper.writeValueAsBytes(band));
                     first = false;
                 } else {
-                    console.printError("Ошибка валидности элемента");
+                    return new ExecutionStatus(false, "Ошибка валидности элемента коллекции");
                 }
             }
             writer.write("]".getBytes());
             writer.close();
+            return new ExecutionStatus(true, "Коллекция успешно сохранена в файл");
         } catch (AccessDeniedException e) {
-            System.err.println("Ошибка доступа: Недостаточно прав для работы с файлом");
+            return new ExecutionStatus(false, "Ошибка доступа: Недостаточно прав для работы с файлом");
         } catch (NoSuchFileException e) {
-        System.err.println("Файл не найден");
+            return new ExecutionStatus(false, "Файл не найден");
         } catch (IOException e) {
-            console.printError("Произошла ошибка при записи коллекции в файл");
+            return new ExecutionStatus(false, "Произошла ошибка при записи коллекции в файл");
         }
     }
 
-    public void ReadCollection(PriorityQueue<MusicBand> collection){
+    public ExecutionStatus ReadCollection(PriorityQueue<MusicBand> collection){
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.registerModule(new JavaTimeModule());
-            File file = new File(fileName);
+            File file = new File(filePath);
             if (!file.exists()) {
-                console.printError("Файл не существует: " + fileName);
-                return;
+                return new ExecutionStatus(false, "Файл не найден");
             }
             MusicBand[] bands = mapper.readValue(file, MusicBand[].class);
             for (MusicBand band : bands) {
                 if (band.validate()) {
                     collection.add(band);
                 } else {
-                    console.printError("Обнаружен некорректный элемент, id: " + band.getId());
+                    return new ExecutionStatus(false,"Обнаружен некорректный элемент, id: " + band.getId());
                 }
             }
+            return new ExecutionStatus(true, "Коллекция успешно загружена");
         }  catch (JsonMappingException e) {
-            console.printError("Ошибка структуры JSON. Возможно файл поврежден: " + e.getMessage());
+            return new ExecutionStatus(false,"Ошибка структуры JSON. Возможно файл поврежден: " + e.getMessage());
         } catch (JsonProcessingException e) {
-            console.printError("Ошибка обработки JSON: " + e.getMessage());
+            return new ExecutionStatus(false,"Ошибка обработки JSON: " + e.getMessage());
         } catch (NoSuchFileException e) {
-            System.err.println("Файл не найден: " + e.getFile());
+            return new ExecutionStatus(false,"Файл не найден: " + e.getFile());
         } catch (AccessDeniedException e) {
-            console.printError("Ошибка доступа: Недостаточно прав для работы с файлом");
+            return new ExecutionStatus(false,"Ошибка доступа: Недостаточно прав для работы с файлом");
         } catch (IOException e) {
-            console.printError("Ошибка чтения файла: " + e.getMessage());
+            return new ExecutionStatus(false,"Ошибка чтения файла: " + e.getMessage());
         } catch (Exception e) {
-            console.printError(e.getMessage());
+            return new ExecutionStatus(false,e.getMessage());
         }
     }
 }

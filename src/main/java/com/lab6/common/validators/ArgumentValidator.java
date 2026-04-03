@@ -1,6 +1,6 @@
 package com.lab6.common.validators;
 
-import sup.ExecutionStatus;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public abstract class ArgumentValidator {
 

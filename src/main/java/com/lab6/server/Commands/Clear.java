@@ -1,15 +1,14 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class Clear extends Command {
-    private final CollectionManager collectionManager;
 
-    public Clear(Console console, CollectionManager collectionManager){
-        super("clear", "очистить коллекцию", console);
-        this.collectionManager = collectionManager;
+    public Clear(){
+        super("clear", "очистить коллекцию", new EmptyValidator());
     }
 
     @Override

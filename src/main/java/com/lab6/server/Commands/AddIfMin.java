@@ -1,13 +1,14 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
-import models.MusicBand;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicBand;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class AddIfMin extends AskingCommand{
-    public AddIfMin(Console console, CollectionManager collectionManager){
-        super("add_if_min", "добавить новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции", console, collectionManager);
+    public AddIfMin(){
+        super("add_if_min", "добавить новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции", new EmptyValidator());
     }
 
     @Override

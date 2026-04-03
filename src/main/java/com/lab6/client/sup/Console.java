@@ -1,4 +1,4 @@
-package sup;
+package com.lab6.client.sup;
 
 public interface Console {
 

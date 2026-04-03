@@ -1,14 +1,14 @@
 package com.lab6.common.validators;
 
-import models.MusicGenre;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicGenre;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class GenreValidator extends ArgumentValidator{
 
     @Override
     public ExecutionStatus validate(String arg) {
         if (arg.isEmpty()) {
-            return new ExecutionStatus(false, "У команды должен быть аргумент (genre)!");
+            return new ExecutionStatus(false, "У команды должен быть аргумент (genre)");
         }
         try {
             MusicGenre genre = MusicGenre.valueOf(arg);

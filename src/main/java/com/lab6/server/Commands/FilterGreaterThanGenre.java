@@ -1,39 +1,38 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.GenreValidator;
 import com.lab6.server.managers.CollectionManager;
-import models.MusicBand;
-import models.MusicGenre;
-import sup.Console;
-import sup.GenreValidator;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicBand;
+import com.lab6.common.models.MusicGenre;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class FilterGreaterThanGenre extends Command{
-    private final CollectionManager collectionManager;
 
-    public FilterGreaterThanGenre(Console console, CollectionManager collectionManager){
-        super("filter_greater_than_genre", "вывести элементы, значение поля genre которых больше заданного", console);
-        this.collectionManager = collectionManager;
+    public FilterGreaterThanGenre(){
+        super("filter_greater_than_genre", "вывести элементы, значение поля genre которых больше заданного", new GenreValidator());
     }
 
-    GenreValidator validator = new GenreValidator();
 
     @Override
     public ExecutionStatus execute(String arg){
         int count = 0;
-        if (validator.validate(arg).isSuccess()) {
+        if (getArgumentValidator().validate(arg).isSuccess()) {
+            StringBuilder s = new StringBuilder();
             for (MusicBand band : collectionManager.getCollection()) {
                 if (band.getGenre().compareTo(MusicGenre.valueOf(arg))>0){
-                    console.println(band.toString());
+                    s.append(band.toString());
                     count++;
                 }
             }
             if (count == 0){
                 return new ExecutionStatus(true, "Не существует элементов значение поля genre которых больше заданного");
             } else {
-                return new ExecutionStatus(true, "Элементы успешно выведены");
+                s.append("Элементы успешно выведены");
+                return new ExecutionStatus(true, s.toString());
             }
         } else {
-            return validator.validate(arg);
+            return getArgumentValidator().validate(arg);
         }
     }
 }

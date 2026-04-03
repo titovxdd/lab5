@@ -1,6 +1,6 @@
 package com.lab6.common.Sup;
 
-import models.MusicBand;
+import com.lab6.common.models.MusicBand;
 
 import java.io.Serial;
 import java.io.Serializable;

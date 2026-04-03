@@ -1,25 +1,34 @@
 package com.lab6.server.Commands;
 
-import sup.ArgParser;
-import sup.Console;
-import sup.Pair;
-import sup.ExecutionStatus;
+import com.lab6.common.validators.ArgumentValidator;
+import com.lab6.server.managers.CollectionManager;
+import com.lab6.common.Sup.Pair;
+import com.lab6.common.Sup.ExecutionStatus;
 
-public abstract class Command implements ArgParser {
+public abstract class Command {
     private final Pair<String, String> nameAndDescription;
-    protected Console console;
+    protected static final CollectionManager collectionManager = CollectionManager.getInstance();
+    private final ArgumentValidator argumentValidator;
 
-    public Command(String name, String description, Console console) {
+
+    public Command(String name, String description, ArgumentValidator argumentValidator) {
         this.nameAndDescription = new Pair<>(name, description);
-        this.console = console;
-    }
-    public ExecutionStatus parse(String arg){
-        return new ExecutionStatus(true, "Аргумент валиден");
+        this.argumentValidator = argumentValidator;
     }
 
-    public void updateConsole(Console console) {
-        this.console = console;
+    public ArgumentValidator getArgumentValidator() {
+        return argumentValidator;
     }
+
+    public ExecutionStatus run(String arg) {
+        ExecutionStatus argumentStatus = argumentValidator.validate(arg);
+        if (argumentStatus.isSuccess()) {
+            return execute(arg);
+        } else {
+            return argumentStatus;
+        }
+    }
+
 
     public String getName() {
         return nameAndDescription.getFirst();

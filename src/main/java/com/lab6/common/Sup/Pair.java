@@ -1,4 +1,4 @@
-package sup;
+package com.lab6.common.Sup;
 
 public class Pair<A, B> {
     private A a;

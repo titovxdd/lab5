@@ -1,7 +1,5 @@
-package sup;
+package com.lab6.client.sup;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.Scanner;
 
 public class FileConsole implements Console {

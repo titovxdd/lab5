@@ -1,28 +1,22 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
-import models.MusicBand;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicBand;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class Show extends Command {
-    private final CollectionManager collectionManager;
 
-    public Show(Console console, CollectionManager collectionManager){
-        super("show", "вывести в стандартный поток вывода все элементы коллекции в строковом представлении", console);
-        this.collectionManager = collectionManager;
+    public Show(){
+        super("show", "вывести в стандартный поток вывода все элементы коллекции в строковом представлении", new EmptyValidator());
     }
 
     @Override
-    public ExecutionStatus execute(String arg){
-        console.println("Вывод всех элементов коллекции:");
+    public ExecutionStatus execute(String argument) {
         if (collectionManager.getCollection().isEmpty()) {
-            console.println("Коллекция пуста");
+            return new ExecutionStatus(true, "Коллекция пуста.\n");
         }
-        for (MusicBand band : collectionManager.getCollection()) {
-            console.println(band.toString());
-            console.println("");
-        }
-        return new ExecutionStatus(true, "Вывод всех элементов коллекции успешно завершен");
+        return new ExecutionStatus(true, collectionManager.getCollection());
     }
 }

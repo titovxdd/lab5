@@ -1,4 +1,4 @@
-package models;
+package com.lab6.common.models;
 
 public enum MusicGenre {
     PSYCHEDELIC_ROCK,

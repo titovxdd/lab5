@@ -1,28 +1,28 @@
 package com.lab6.server.Commands;
 
-import com.lab6.server.managers.Commands;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.common.validators.EmptyValidator;
+import com.lab6.server.managers.CommandManager;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class Help extends Command{
-    private final Commands commands;
+    private final CommandManager commandManager;
 
-    public Help(Console console, Commands commands) {
-        super("help", "вывести справку по доступным командам", console);
-        this.commands = commands;
+    public Help(CommandManager commandManager) {
+        super("help", "вывести справку по доступным командам", new EmptyValidator());
+        this.commandManager = commandManager;
     }
 
     @Override
-    public ExecutionStatus execute(String arg){
-        console.println("Список доступных команд:");
-        for (var command : commands.getCommandsMap().entrySet()) {
-            console.println(command.getValue().getName() + " - " + command.getValue().getDescription());
+    public ExecutionStatus execute(String arg) {
+        StringBuilder helpMessage = new StringBuilder("Список доступных команд:\n");
+        for (var command : commandManager.getCommandsMap().entrySet()) {
+            helpMessage.append(command.getValue().getName())
+                    .append(" - ")
+                    .append(command.getValue().getDescription())
+                    .append("\n");
         }
-        return new ExecutionStatus(true, "Справка по командам успешно выведена");
-    }
-
-    @Override
-    public ExecutionStatus parse(String arg){
-        return new ExecutionStatus(true, " ");
+        helpMessage.append("Справка по командам успешно выведена");
+        return new ExecutionStatus(true, helpMessage.toString());
     }
 }

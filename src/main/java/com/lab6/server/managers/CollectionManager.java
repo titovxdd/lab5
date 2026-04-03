@@ -1,16 +1,17 @@
 package com.lab6.server.managers;
 
-import models.MusicBand;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicBand;
+import com.lab6.common.Sup.ExecutionStatus;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 public class CollectionManager {
-    private final DumpManager dumpManager;
+    private final DumpManager dumpManager = DumpManager.getInstance();
     private static volatile CollectionManager instance;
     private Long id = 1L;
     private PriorityQueue<MusicBand> collection = new PriorityQueue<>();
@@ -18,9 +19,7 @@ public class CollectionManager {
     private LocalDateTime InitializationDate;
     private LocalDateTime lastSaveDate;
 
-    public CollectionManager(DumpManager dumpManager) {
-        this.dumpManager = dumpManager;
-    }
+    private CollectionManager() {}
 
 
     public static CollectionManager getInstance() {
@@ -41,13 +40,12 @@ public class CollectionManager {
         collection = sortedBands;
     }
 
+    public PriorityQueue<MusicBand> getBands() {
+        return collection;
+    }
+
     public void removeById(Long elementId) {
-        MusicBand band = bands.get(elementId);
-        if (band != null) {
-            collection.remove(band);
-            bands.remove(elementId);
-            id = elementId;
-        }
+        collection = collection.stream().filter(band -> !band.getId().equals(elementId)).collect(Collectors.toCollection(PriorityQueue::new));
     }
 
     public MusicBand getById(Long id) {
@@ -76,6 +74,7 @@ public class CollectionManager {
         dumpManager.WriteCollection(collection);
         lastSaveDate = LocalDateTime.now();
     }
+
 
     public PriorityQueue<MusicBand> getCollection() {
         return collection;

@@ -1,28 +1,24 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class Info extends Command{
-    private final CollectionManager collectionManager;
 
-    public Info(Console console, CollectionManager collectionManager){
-        super("info", "вывести в стандартный поток вывода информацию о коллекции", console);
-        this.collectionManager = collectionManager;
+    public Info(){
+        super("info", "вывести в стандартный поток вывода информацию о коллекции", new EmptyValidator());
     }
 
-    @Override
-    public ExecutionStatus parse(String arg){
-        return new ExecutionStatus(true, " ");
-    }
 
     @Override
-    public ExecutionStatus execute(String arg){
-        console.println("Тип коллекции: " + collectionManager.getCollection().getClass().getName());
-        console.println("Дата инициализации: " + collectionManager.getInitializationDate());
-        console.println("Дата последнего сохранения: " + collectionManager.getLastSaveDate());
-        console.println("Количество элементов: " + collectionManager.getCollection().size());
-        return new ExecutionStatus(true, "Информация о коллекции успешно выведена");
+    public ExecutionStatus execute(String argument) {
+        String infoMessage = "Тип коллекции: " + collectionManager.getBands().getClass().getName() +
+                "\nДата инициализации: " + collectionManager.getInitializationDate() +
+                "\nДата последнего сохранения: " + collectionManager.getLastSaveDate() +
+                "\nКоличество элементов: " + collectionManager.getBands().size() +
+                "\nИнформация о коллекции успешно выведена!";
+        return new ExecutionStatus(true, infoMessage);
     }
 }

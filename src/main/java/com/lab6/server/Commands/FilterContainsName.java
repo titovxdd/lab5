@@ -1,35 +1,31 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
-import models.MusicBand;
-import sup.Console;
-import sup.ExecutionStatus;
+import com.lab6.common.models.MusicBand;
+import com.lab6.client.sup.Console;
+import com.lab6.common.Sup.ExecutionStatus;
 
 public class FilterContainsName extends Command{
-    private final CollectionManager collectionManager;
 
-    public FilterContainsName(Console console, CollectionManager collectionManager){
-        super("filter_contains_name", "вывести элементы, значение поля name которых содержит заданную подстроку", console);
-        this.collectionManager = collectionManager;
+    public FilterContainsName(){
+        super("filter_contains_name", "вывести элементы, значение поля name которых содержит заданную подстроку", new EmptyValidator());
     }
 
     @Override
     public ExecutionStatus execute(String arg){
         int count = 0;
-        if (!(arg.isEmpty())) {
+        StringBuilder s = new StringBuilder();
             for (MusicBand band : collectionManager.getCollection()) {
                 if (band.getName().contains(arg)){
-                    console.println(band.toString());
+                    s.append(band.toString());
                     count++;
                 }
             }
             if (count == 0){
                 return new ExecutionStatus(true, "Не существует элементов значение поля name содержит заданную подстроку");
             } else {
-                return new ExecutionStatus(true, "Элементы успешно выведены");
+                return new ExecutionStatus(true, s.toString());
             }
-        } else {
-            return new ExecutionStatus(false, "Команда должна иметь аргумент(name)");
         }
-    }
 }
