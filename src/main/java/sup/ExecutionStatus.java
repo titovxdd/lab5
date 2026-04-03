@@ -1,9 +1,9 @@
 package sup;
 
-public class Status {
+public class ExecutionStatus {
     private Pair<Boolean, String> status;
 
-    public Status(boolean success, String message) {
+    public ExecutionStatus(boolean success, String message) {
         this.status = new Pair<>(success, message);
     }
 

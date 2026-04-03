@@ -1,36 +1,36 @@
-package Commands;
+package com.lab6.server.Commands;
 
-import managers.Context;
+import com.lab6.server.managers.CollectionManager;
 import models.MusicBand;
 import models.MusicGenre;
 import sup.Console;
 import sup.GenreValidator;
-import sup.Status;
+import sup.ExecutionStatus;
 
 public class FilterGreaterThanGenre extends Command{
-    private final Context context;
+    private final CollectionManager collectionManager;
 
-    public FilterGreaterThanGenre(Console console, Context context){
+    public FilterGreaterThanGenre(Console console, CollectionManager collectionManager){
         super("filter_greater_than_genre", "вывести элементы, значение поля genre которых больше заданного", console);
-        this.context = context;
+        this.collectionManager = collectionManager;
     }
 
     GenreValidator validator = new GenreValidator();
 
     @Override
-    public Status execute(String arg){
+    public ExecutionStatus execute(String arg){
         int count = 0;
         if (validator.validate(arg).isSuccess()) {
-            for (MusicBand band : context.getCollection()) {
+            for (MusicBand band : collectionManager.getCollection()) {
                 if (band.getGenre().compareTo(MusicGenre.valueOf(arg))>0){
                     console.println(band.toString());
                     count++;
                 }
             }
             if (count == 0){
-                return new Status(true, "Не существует элементов значение поля genre которых больше заданного");
+                return new ExecutionStatus(true, "Не существует элементов значение поля genre которых больше заданного");
             } else {
-                return new Status(true, "Элементы успешно выведены");
+                return new ExecutionStatus(true, "Элементы успешно выведены");
             }
         } else {
             return validator.validate(arg);

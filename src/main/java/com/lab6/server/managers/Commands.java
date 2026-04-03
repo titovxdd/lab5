@@ -1,8 +1,8 @@
-package managers;
+package com.lab6.server.managers;
 
 import java.util.HashMap;
 import java.util.Map;
-import Commands.Command;
+import com.lab6.server.Commands.Command;
 
 public class Commands {
     private static Map<String, Command> commands = new HashMap<>();

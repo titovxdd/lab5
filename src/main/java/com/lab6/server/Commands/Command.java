@@ -1,9 +1,9 @@
-package Commands;
+package com.lab6.server.Commands;
 
 import sup.ArgParser;
 import sup.Console;
 import sup.Pair;
-import sup.Status;
+import sup.ExecutionStatus;
 
 public abstract class Command implements ArgParser {
     private final Pair<String, String> nameAndDescription;
@@ -13,8 +13,8 @@ public abstract class Command implements ArgParser {
         this.nameAndDescription = new Pair<>(name, description);
         this.console = console;
     }
-    public Status parse(String arg){
-        return new Status(true, "Аргумент валиден");
+    public ExecutionStatus parse(String arg){
+        return new ExecutionStatus(true, "Аргумент валиден");
     }
 
     public void updateConsole(Console console) {
@@ -28,7 +28,7 @@ public abstract class Command implements ArgParser {
     public String getDescription() {
         return nameAndDescription.getSecond();
     }
-    public abstract Status execute(String arg);
+    public abstract ExecutionStatus execute(String arg);
 
     @Override
     public int hashCode() {

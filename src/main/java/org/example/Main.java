@@ -1,13 +1,12 @@
 package org.example;
 
-import Commands.*;
-import managers.Commands;
-import managers.Context;
-import managers.DumpManager;
-import managers.Executer;
-import sup.IdValidator;
+import com.lab6.server.Commands.*;
+import com.lab6.server.managers.Commands;
+import com.lab6.server.managers.CollectionManager;
+import com.lab6.server.managers.DumpManager;
+import com.lab6.server.managers.Executer;
 import sup.StandartConsole;
-import sup.Status;
+import sup.ExecutionStatus;
 
 
 public class Main {
@@ -29,8 +28,8 @@ public class Main {
             System.exit(1);
         }
         DumpManager dumpManager = new DumpManager(filePath, console);
-        Context context = new Context(dumpManager);
-        Status loadStatus = context.loadCollection();
+        CollectionManager collectionManager = new CollectionManager(dumpManager);
+        ExecutionStatus loadStatus = collectionManager.loadCollection();
 
 
         if (!loadStatus.isSuccess()){
@@ -41,20 +40,20 @@ public class Main {
         Executer executer = new Executer(console);
         Commands commandManager = new Commands() {{
             register("help",new Help(console, this));
-            register("info",new Info(console, context));
-            register("show",new Show(console, context));
-            register("add",new Add(console, context));
+            register("info",new Info(console, collectionManager));
+            register("show",new Show(console, collectionManager));
+            register("add",new Add(console, collectionManager));
             register("exit", new Exit(console));
-            register("head", new Head(console, context));
-            register("add_if_min", new AddIfMin(console, context));
-            register("add_if_max", new AddIfMax(console, context));
-            register("count_less_than_description", new CountLessThanDescription(console, context));
-            register("filter_greater_than_genre", new FilterGreaterThanGenre(console, context));
-            register("remove_by_id", new RemoveById(console, context));
-            register("update", new Update(console, context));
-            register("save", new Save(console, context));
-            register("clear", new Clear(console, context));
-            register("filter_contains_name", new FilterContainsName(console, context));
+            register("head", new Head(console, collectionManager));
+            register("add_if_min", new AddIfMin(console, collectionManager));
+            register("add_if_max", new AddIfMax(console, collectionManager));
+            register("count_less_than_description", new CountLessThanDescription(console, collectionManager));
+            register("filter_greater_than_genre", new FilterGreaterThanGenre(console, collectionManager));
+            register("remove_by_id", new RemoveById(console, collectionManager));
+            register("update", new Update(console, collectionManager));
+            register("save", new Save(console, collectionManager));
+            register("clear", new Clear(console, collectionManager));
+            register("filter_contains_name", new FilterContainsName(console, collectionManager));
             register("execute_script", new ExecuteScript(console, executer));
         }};
         executer.interactiveMode();

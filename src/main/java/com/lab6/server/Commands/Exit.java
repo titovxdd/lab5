@@ -1,7 +1,7 @@
-package Commands;
+package com.lab6.server.Commands;
 
 import sup.Console;
-import sup.Status;
+import sup.ExecutionStatus;
 
 public class Exit extends Command{
 
@@ -9,8 +9,8 @@ public class Exit extends Command{
         super("exit", "завершить программу (без сохранения в файл)", console);
     }
 
-    public Status execute(String arg){
+    public ExecutionStatus execute(String arg){
         System.exit(0);
-        return new Status(true, "Программа завершена!");
+        return new ExecutionStatus(true, "Программа завершена!");
     }
 }

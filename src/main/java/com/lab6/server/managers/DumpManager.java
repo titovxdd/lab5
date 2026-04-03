@@ -1,4 +1,4 @@
-package managers;
+package com.lab6.server.managers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;

@@ -1,8 +1,8 @@
-package Commands;
+package com.lab6.server.Commands;
 
-import managers.Commands;
+import com.lab6.server.managers.Commands;
 import sup.Console;
-import sup.Status;
+import sup.ExecutionStatus;
 
 public class Help extends Command{
     private final Commands commands;
@@ -13,16 +13,16 @@ public class Help extends Command{
     }
 
     @Override
-    public Status execute(String arg){
+    public ExecutionStatus execute(String arg){
         console.println("Список доступных команд:");
         for (var command : commands.getCommandsMap().entrySet()) {
             console.println(command.getValue().getName() + " - " + command.getValue().getDescription());
         }
-        return new Status(true, "Справка по командам успешно выведена");
+        return new ExecutionStatus(true, "Справка по командам успешно выведена");
     }
 
     @Override
-    public Status parse(String arg){
-        return new Status(true, " ");
+    public ExecutionStatus parse(String arg){
+        return new ExecutionStatus(true, " ");
     }
 }

@@ -1,5 +1,5 @@
 package sup;
 
 public interface ArgParser {
-    Status parse(String arg);
+    ExecutionStatus parse(String arg);
 }
