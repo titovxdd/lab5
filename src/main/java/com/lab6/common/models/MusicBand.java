@@ -3,10 +3,14 @@ package com.lab6.common.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class MusicBand extends Element{
+public class MusicBand extends Element implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 101L;
     private Long id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
     private String name;//Поле не может быть null, Строка не может быть пустой
     private Coordinates coordinates; //Поле не может быть null

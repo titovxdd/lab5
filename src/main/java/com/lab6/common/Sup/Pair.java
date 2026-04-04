@@ -1,6 +1,11 @@
 package com.lab6.common.Sup;
 
-public class Pair<A, B> {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class Pair<A, B> implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 104L;
     private A a;
     private B b;
 

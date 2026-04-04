@@ -3,9 +3,13 @@ package com.lab6.common.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Coordinates {
+public class Coordinates implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 100L;
     private Long x;
     private float y;
 

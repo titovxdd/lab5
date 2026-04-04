@@ -1,4 +1,7 @@
 FROM eclipse-temurin:17-jre
-COPY ./target/lab5-1.0-SNAPSHOT-jar-with-dependencies.jar app.jar
-EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+WORKDIR /app
+COPY target/lab6-server.jar /app/server.jar
+COPY target/lab6-client.jar /app/client.jar
+RUN mkdir -p /app/data /app/logs
+EXPOSE 6767
+CMD ["java", "-jar", "/app/server.jar"]

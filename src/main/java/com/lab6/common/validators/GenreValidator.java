@@ -3,7 +3,12 @@ package com.lab6.common.validators;
 import com.lab6.common.models.MusicGenre;
 import com.lab6.common.Sup.ExecutionStatus;
 
-public class GenreValidator extends ArgumentValidator{
+import java.io.Serial;
+import java.io.Serializable;
+
+public class GenreValidator extends ArgumentValidator implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 108L;
 
     @Override
     public ExecutionStatus validate(String arg) {

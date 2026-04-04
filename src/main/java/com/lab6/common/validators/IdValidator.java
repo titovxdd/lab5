@@ -2,7 +2,12 @@ package com.lab6.common.validators;
 
 import com.lab6.common.Sup.ExecutionStatus;
 
-public class IdValidator extends ArgumentValidator {
+import java.io.Serial;
+import java.io.Serializable;
+
+public class IdValidator extends ArgumentValidator implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 109L;
 
     @Override
     public ExecutionStatus validate(String arg) {

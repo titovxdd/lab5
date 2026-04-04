@@ -29,10 +29,8 @@ public class ServerNetworkManager {
     }
 
     public Request receive(Socket clientSocket) throws IOException, ClassNotFoundException {
-        try (ObjectInputStream input = new ObjectInputStream(clientSocket.getInputStream())) {
-            Server.logger.info("Request received from client");
-            return (Request) input.readObject();
-        }
+        ObjectInputStream input = new ObjectInputStream(clientSocket.getInputStream());
+        return (Request) input.readObject();
     }
 
     public void send(Response response, Socket clientSocket) throws IOException {

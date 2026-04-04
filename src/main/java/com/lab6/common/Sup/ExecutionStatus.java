@@ -2,9 +2,13 @@ package com.lab6.common.Sup;
 
 import com.lab6.common.models.MusicBand;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.PriorityQueue;
 
-public class ExecutionStatus {
+public class ExecutionStatus implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 103L;
     private final boolean status;
     private String message;
     private PriorityQueue<MusicBand> collection;

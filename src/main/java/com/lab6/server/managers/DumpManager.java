@@ -28,8 +28,8 @@ public class DumpManager {
         } else if (filePath.isEmpty()) {
             Server.logger.severe("Environment variable LAB5_FILE_PATH does not contain a file path!");
             System.exit(1);
-        } else if (!filePath.endsWith(".csv")) {
-            Server.logger.severe("The file must be in .csv format!");
+        } else if (!filePath.endsWith(".json")) {
+            Server.logger.severe("The file must be in .json format!");
             System.exit(1);
         } else if (!new File(filePath).exists()) {
             Server.logger.severe("The file at the specified path was not found!");

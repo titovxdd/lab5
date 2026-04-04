@@ -22,6 +22,16 @@ public class ClientNetworkManager {
         channel = SocketChannel.open();
         channel.configureBlocking(false);
         channel.connect(new InetSocketAddress(SERVER_HOST, PORT));
+
+        while (!channel.finishConnect()) {
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IOException("Connection interrupted", e);
+            }
+        }
+
     }
 
     public void close() throws IOException {
@@ -51,6 +61,15 @@ public class ClientNetworkManager {
             if (read == -1) {
                 throw new IOException("Server closed connection");
             }
+            if (read == 0) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException("Interrupted while reading data", e);
+                }
+                continue;
+            }
         }
         lengthBuffer.flip();
         int length = lengthBuffer.getInt();
@@ -60,6 +79,15 @@ public class ClientNetworkManager {
             int read = channel.read(dataBuffer);
             if (read == -1) {
                 throw new IOException("Server closed connection while reading data");
+            }
+            if (read == 0) {
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    throw new IOException("Interrupted while reading data", e);
+                }
+                continue;
             }
         }
 

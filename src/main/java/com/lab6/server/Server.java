@@ -1,7 +1,9 @@
 package com.lab6.server;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.Sup.Request;
 import com.lab6.common.Sup.Response;
+import com.lab6.common.validators.ArgumentValidator;
 import com.lab6.server.Commands.*;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.server.managers.CommandManager;
@@ -11,6 +13,8 @@ import com.lab6.common.Sup.ExecutionStatus;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.*;
 
 public final class Server {
@@ -64,6 +68,7 @@ public final class Server {
             register("update", new Update());
             register("clear", new Clear());
             register("filter_contains_name", new FilterContainsName());
+            register("execute_script", new ExecuteScript());
         }};
 
         Executer executer = new Executer(commandManager);
@@ -80,6 +85,7 @@ public final class Server {
                 Socket clientSocket = null;
                 try {
                     clientSocket = networkManager.acceptConnection();
+                    sendCommandsToClient(clientSocket);
 
 
                     boolean clientConnected = true;
@@ -120,6 +126,21 @@ public final class Server {
 
         } catch (IOException e) {
             logger.severe("Error while running the server: " + e.getMessage());
+        }
+    }
+    private static void sendCommandsToClient(Socket clientSocket) {
+        try {
+            Map<String, Pair<ArgumentValidator, Boolean>> commandsData = new HashMap<>();
+            for (Map.Entry<String, Command> entry : commandManager.getCommandsMap().entrySet()) {
+                boolean isAskingCommand = AskingCommand.class.isAssignableFrom(entry.getValue().getClass());
+                commandsData.put(entry.getKey(), new Pair<>(entry.getValue().getArgumentValidator(), isAskingCommand));
+            }
+
+            Response commandsResponse = new Response(commandsData);
+            networkManager.send(commandsResponse, clientSocket);
+
+        } catch (IOException e) {
+            logger.severe("Error sending command list to client: " + e.getMessage());
         }
     }
 

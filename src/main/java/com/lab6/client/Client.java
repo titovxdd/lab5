@@ -19,7 +19,7 @@ import java.util.Scanner;
 public final class Client {
     private static final Console console = new StandartConsole();
     private static final int SERVER_PORT = 6767;
-    private static final String SERVER_HOST = "localhost";
+    private static final String SERVER_HOST = System.getenv().getOrDefault("SERVER_HOST", "localhost");
 
     private static Map<String, Pair<ArgumentValidator, Boolean>> commandsData;
     private static final ClientNetworkManager networkManager = new ClientNetworkManager(SERVER_PORT, SERVER_HOST);
@@ -30,6 +30,7 @@ public final class Client {
         do {
             try {
                 networkManager.connect();
+                commandsData = networkManager.receive().getCommandsMap();
                 console.println("Успешно подключено к " + SERVER_HOST + ":" + SERVER_PORT);
                 console.println("Для получения списка команд введите 'help'");
                 connectionAttempts = 1;
@@ -89,6 +90,10 @@ public final class Client {
         if (commandsData.get(commands[0]).getSecond()) {
             return askingRequest(console, inputCommand); // Если команда требует построчного ввода
         } else if (commands[0].equals("execute_script")) {
+            if (commands[1].isEmpty()) {
+                console.printError("Укажите имя файла скрипта. Пример: execute_script script.txt");
+                return null;
+            }
             ExecutionStatus scriptStatus = runScript(commands[1].trim());
             if (!scriptStatus.isSuccess()) {
                 console.printError(scriptStatus.getMessage());

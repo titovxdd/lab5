@@ -2,10 +2,14 @@ package com.lab6.common.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Person {
+public class Person implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 102L;
     private String name;
     private LocalDate birthday;
     private Color eyeColor;
