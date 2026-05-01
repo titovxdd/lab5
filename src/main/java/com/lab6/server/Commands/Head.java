@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.client.sup.Console;
@@ -11,7 +12,7 @@ public class Head extends Command{
         super("head", "вывести первый элемент коллекции", new EmptyValidator());
     }
 
-    public ExecutionStatus execute(String arg){
+    public ExecutionStatus execute(String arg, Pair<String, String> user){
         if (collectionManager.getCollection().isEmpty()){
             return new ExecutionStatus(false, "Коллекция пуста");
         }

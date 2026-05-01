@@ -19,7 +19,8 @@ public class MusicBand extends Element implements Serializable {
     private Long singlesCount; //Значение поля должно быть больше 0
     private String description; //Поле может быть null
     private MusicGenre genre; //Поле может быть null
-    private Person frontMan; //Поле не может быть null
+    private Person frontMan;
+    private final String user;//Поле не может быть null
 
 
     @JsonCreator
@@ -31,7 +32,8 @@ public class MusicBand extends Element implements Serializable {
                       @JsonProperty("coordinates") Coordinates coordinates,
                       @JsonProperty("singlesCount") Long singlesCount,
                       @JsonProperty("genre") MusicGenre genre,
-                      @JsonProperty("frontMan") Person frontMan) {
+                      @JsonProperty("frontMan") Person frontMan,
+                      String user) {
         this.id = id;
         this.name = name;
         this.creationDate = creationDate;
@@ -41,6 +43,40 @@ public class MusicBand extends Element implements Serializable {
         this.singlesCount = singlesCount;
         this.genre = genre;
         this.frontMan = frontMan;
+        this.user = user;
+
+    }
+
+    public void updateId(Long id) {
+        this.id = id;
+    }
+
+    public void updateName(String name) {
+        this.name = name;
+    }
+
+    public void updateCoordinates(Coordinates coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void updateNumberOfParticipants(Long numberOfParticipants) {
+        this.numberOfParticipants = numberOfParticipants;
+    }
+
+    public void updateSinglesCount(Long singlesCount) {
+        this.singlesCount = singlesCount;
+    }
+
+    public void updateDescription(String description) {
+        this.description = description;
+    }
+
+    public void updateGenre(MusicGenre genre) {
+        this.genre = genre;
+    }
+
+    public void updateFrontMan(Person frontman) {
+        this.frontMan = frontman;
     }
 
     public Long getId() {
@@ -79,8 +115,9 @@ public class MusicBand extends Element implements Serializable {
         return description;
     }
 
-    public void updateId(Long id) {
-        this.id = id;
+
+    public String getUser() {
+        return user;
     }
 
     @Override
@@ -133,31 +170,6 @@ public class MusicBand extends Element implements Serializable {
         if (description == null) return false;
         if (frontMan == null || !frontMan.validate()) return false;
         return true;
-    }
-    public static MusicBand fromArray(String[] array) {
-        Long id;
-        String name;
-        Coordinates coordinates;
-        LocalDate creationDate;
-        Long numberOfParticipants;
-        Long singlesCount;
-        String description;
-        MusicGenre genre;
-        Person frontMan;
-        try {
-            id = Long.parseLong(array[0]);
-            name = array[1];
-            coordinates = new Coordinates(Long.parseLong(array[2]), Float.parseFloat(array[3]));
-            creationDate = LocalDate.parse(array[4]);
-            numberOfParticipants = Long.parseLong(array[5]);
-            singlesCount = Long.parseLong(array[6]);
-            description = array[7];
-            genre = MusicGenre.valueOf(array[8]);
-            frontMan = new Person(array[9], LocalDate.parse(array[10]), Color.valueOf(array[11]));
-        } catch (Exception e) {
-            return null;
-        }
-        return new MusicBand(id, name, creationDate, numberOfParticipants, description, coordinates, singlesCount, genre, frontMan);
     }
 
     public static String[] toArray(MusicBand band) {

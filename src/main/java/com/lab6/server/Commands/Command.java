@@ -1,9 +1,12 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.CommandNames;
+import com.lab6.common.Sup.PermissionType;
 import com.lab6.common.validators.ArgumentValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.common.Sup.Pair;
 import com.lab6.common.Sup.ExecutionStatus;
+import com.lab6.server.managers.DBManager;
 
 public abstract class Command {
     private final Pair<String, String> nameAndDescription;
@@ -20,13 +23,30 @@ public abstract class Command {
         return argumentValidator;
     }
 
-    public ExecutionStatus run(String arg) {
-        ExecutionStatus argumentStatus = argumentValidator.validate(arg);
+    public ExecutionStatus run(String arg, Pair<String, String> user) {
+        ExecutionStatus argumentStatus = argumentValidator.validate(arg, getName());
         if (argumentStatus.isSuccess()) {
-            return execute(arg);
+            ExecutionStatus permissionStatus = checkPermission(user);
+            if (!permissionStatus.isSuccess()) {
+                return permissionStatus;
+            }
+            return execute(arg, user);
         } else {
             return argumentStatus;
         }
+    }
+
+    protected ExecutionStatus checkPermission(Pair<String, String> user) {
+        ExecutionStatus accessStatus = DBManager.getInstance().checkUserPermission(user);
+        if (!accessStatus.isSuccess()) {
+            return accessStatus;
+        }
+        int accessPermissionLevel = PermissionType.valueOf(accessStatus.getMessage()).getPermissionLevel();
+        int requiredPermissionLevel = CommandNames.valueOf(getName().split(" ")[0].toUpperCase()).getRequiredPermission().getPermissionLevel();
+        if (accessPermissionLevel < requiredPermissionLevel) {
+            return new ExecutionStatus(false, "У вас недостаточно прав для выполнения этой команды.");
+        }
+        return new ExecutionStatus(true, "Доступ разрешён.");
     }
 
 
@@ -37,7 +57,8 @@ public abstract class Command {
     public String getDescription() {
         return nameAndDescription.getSecond();
     }
-    public abstract ExecutionStatus execute(String arg);
+
+    public abstract ExecutionStatus execute(String arg, Pair<String, String> user);
 
     @Override
     public int hashCode() {

@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.client.sup.Console;
@@ -12,8 +13,8 @@ public class Clear extends Command {
     }
 
     @Override
-    public ExecutionStatus execute(String arg){
-        collectionManager.clear();
+    public ExecutionStatus execute(String arg, Pair<String, String> user){
+        collectionManager.clear(user);
         return new ExecutionStatus(true, "Коллекция успешно очищена");
     }
 

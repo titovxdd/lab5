@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.common.models.MusicBand;
 import com.lab6.client.sup.Console;
@@ -13,9 +14,7 @@ public class Update extends AskingCommand{
     }
 
     @Override
-    public ExecutionStatus execute(MusicBand band){
-        collectionManager.removeById(band.getId());
-        collectionManager.add(band);
-        return new ExecutionStatus(true, "Элемент успешно обновлён!");
+    public ExecutionStatus execute(MusicBand band, Pair<String, String> user){
+        return collectionManager.update(band, user);
     }
 }

@@ -1,6 +1,7 @@
 package com.lab6.server.Commands;
 
 import com.lab6.common.Sup.ExecutionStatus;
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 
 public class ExecuteScript extends Command{
@@ -10,7 +11,7 @@ public class ExecuteScript extends Command{
     }
 
     @Override
-    public ExecutionStatus execute(String arg) {
+    public ExecutionStatus execute(String arg, Pair<String, String> user) {
         return new ExecutionStatus(true, "Данную команду нельзя отправить на сервер");
     }
 }

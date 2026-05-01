@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.GenreValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.common.models.MusicBand;
@@ -15,9 +16,9 @@ public class FilterGreaterThanGenre extends Command{
 
 
     @Override
-    public ExecutionStatus execute(String arg){
+    public ExecutionStatus execute(String arg, Pair<String, String> user){
         int count = 0;
-        if (getArgumentValidator().validate(arg).isSuccess()) {
+        if (getArgumentValidator().validate(arg, getName()).isSuccess()) {
             StringBuilder s = new StringBuilder();
             for (MusicBand band : collectionManager.getCollection()) {
                 if (band.getGenre().compareTo(MusicGenre.valueOf(arg))>0){
@@ -32,7 +33,7 @@ public class FilterGreaterThanGenre extends Command{
                 return new ExecutionStatus(true, s.toString());
             }
         } else {
-            return getArgumentValidator().validate(arg);
+            return getArgumentValidator().validate(arg, getName());
         }
     }
 }

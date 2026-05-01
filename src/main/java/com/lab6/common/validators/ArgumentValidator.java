@@ -7,5 +7,5 @@ import java.io.Serializable;
 
 public abstract class ArgumentValidator {
 
-    public abstract ExecutionStatus validate(String arg);
+    public abstract ExecutionStatus validate(String arg, String name);
 }

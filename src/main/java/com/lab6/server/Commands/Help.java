@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CommandManager;
 import com.lab6.client.sup.Console;
@@ -14,7 +15,7 @@ public class Help extends Command{
     }
 
     @Override
-    public ExecutionStatus execute(String arg) {
+    public ExecutionStatus execute(String arg, Pair<String, String> user) {
         StringBuilder helpMessage = new StringBuilder("Список доступных команд:\n");
         for (var command : commandManager.getCommandsMap().entrySet()) {
             helpMessage.append(command.getValue().getName())
@@ -25,4 +26,5 @@ public class Help extends Command{
         helpMessage.append("Справка по командам успешно выведена");
         return new ExecutionStatus(true, helpMessage.toString());
     }
+
 }

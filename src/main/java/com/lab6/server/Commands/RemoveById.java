@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.client.sup.Console;
 import com.lab6.common.validators.IdValidator;
@@ -12,12 +13,12 @@ public class RemoveById extends Command{
     }
 
     @Override
-    public ExecutionStatus execute(String argument) {
+    public ExecutionStatus execute(String argument, Pair<String, String> user) {
         Long id = Long.parseLong(argument);
         if (collectionManager.getById(id) == null) {
             return new ExecutionStatus(false, "Элемент с указанным id не найден!");
         }
-        collectionManager.removeById(id);
+        collectionManager.removeById(id, user);
         return new ExecutionStatus(true, "Элемент успешно удален!");
     }
 }

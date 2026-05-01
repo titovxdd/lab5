@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.common.models.MusicBand;
@@ -13,8 +14,8 @@ public class Add extends AskingCommand{
     }
 
     @Override
-    public ExecutionStatus execute(MusicBand band) {
-        collectionManager.add(band);
+    public ExecutionStatus execute(MusicBand band, Pair<String, String> user) {
+        collectionManager.add(band, user);
         return new ExecutionStatus(true, "Элемент успешно добавлен в коллекцию");
     }
 }

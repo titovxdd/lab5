@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.common.models.MusicBand;
@@ -13,7 +14,7 @@ public class FilterContainsName extends Command{
     }
 
     @Override
-    public ExecutionStatus execute(String arg){
+    public ExecutionStatus execute(String arg, Pair<String, String> user){
         int count = 0;
         StringBuilder s = new StringBuilder();
             for (MusicBand band : collectionManager.getCollection()) {

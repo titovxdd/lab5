@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.ArgumentValidator;
 import com.lab6.common.models.MusicBand;
 import com.lab6.common.validators.IdValidator;
@@ -11,33 +12,34 @@ public abstract class AskingCommand extends Command{
         super(name, description, argumentValidator);
     }
 
-    public ExecutionStatus run(String arg, MusicBand band) {
-        ExecutionStatus argumentStatus = getArgumentValidator().validate(arg);
+    public ExecutionStatus run(String arg, MusicBand band, Pair<String, String> user) {
+        ExecutionStatus argumentStatus = getArgumentValidator().validate(arg, getName());
         if (argumentStatus.isSuccess()) {
-            Long id;
+            ExecutionStatus permissionStatus = checkPermission(user);
+            if (!permissionStatus.isSuccess()) {
+                return permissionStatus;
+            }
             if (getArgumentValidator() instanceof IdValidator) {
-                id = Long.parseLong(arg);
+                Long id = Long.parseLong(arg);
                 if (collectionManager.getById(id) == null) {
                     return new ExecutionStatus(false, "Элемент с указанным id не найден");
                 }
-            } else {
-                id = collectionManager.getFreeId();
+                band.updateId(id);
             }
-            band.updateId(id);
-            return execute(band);
+            return execute(band, user);
         } else {
             return argumentStatus;
         }
     }
     @Override
-    public ExecutionStatus execute(String arg) {
+    public ExecutionStatus execute(String arg, Pair<String, String> user) {
         return null;
     }
 
-    public abstract ExecutionStatus execute(MusicBand band);
+    public abstract ExecutionStatus execute(MusicBand band, Pair<String, String> user);
 
     @Override
-    public ExecutionStatus run(String arg) {
+    public ExecutionStatus run(String arg, Pair<String, String> user) {
         return new ExecutionStatus(false, "Метод должен вызываться с аргументом MusicBand");
     }
 }

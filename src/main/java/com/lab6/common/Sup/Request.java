@@ -10,15 +10,20 @@ public class Request implements Serializable {
     private static final long serialVersionUID = 1L;
     private final String string;
     private MusicBand band = null;
+    private final Pair<String, String> user;
 
-    public Request(String string) {
+    public Request(String string, Pair<String, String> user) {
         this.string = string;
+        this.user = user;
     }
 
-    public Request(String string, MusicBand band) {
+    public Request(String string, MusicBand band, Pair<String, String> user) {
         this.string = string;
         this.band = band;
+        this.user = user;
     }
+
+    public Pair<String, String> getUser() { return user; }
 
     public String[] getCommand() {
         String[] inputCommand = (string.trim() + " ").split(" ", 2);
@@ -35,6 +40,7 @@ public class Request implements Serializable {
         return "Request{" +
                 "string='" + string + '\'' +
                 ", band=" + band +
+                ", user=" + user +
                 '}';
     }
 }

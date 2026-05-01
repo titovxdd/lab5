@@ -1,23 +1,25 @@
 package com.lab6.server;
 
-import com.lab6.common.Sup.Pair;
-import com.lab6.common.Sup.Request;
-import com.lab6.common.Sup.Response;
-import com.lab6.common.validators.ArgumentValidator;
-import com.lab6.server.Commands.*;
+import com.lab6.common.Sup.ExecutionStatus;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.server.managers.CommandManager;
-import com.lab6.server.managers.Executer;
-import com.lab6.server.managers.ServerNetworkManager;
-import com.lab6.common.Sup.ExecutionStatus;
+import com.lab6.server.managers.DBManager;
+import com.lab6.server.managers.ThreadManager;
+import com.lab6.server.Commands.*;
 
 import java.io.IOException;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.*;
 
 public final class Server {
+
+    private static final int PORT = 6767;
+    private static volatile boolean isRunning = true;
+
+    private static CommandManager commandManager;
+    private static ThreadManager threadManager;
+    private static CollectionManager collectionManager;
+    private static DBManager dbManager;
+
     public static final Logger logger = Logger.getLogger(Server.class.getName());
 
     static {
@@ -38,110 +40,88 @@ public final class Server {
         }
     }
 
-
-    private static final int PORT = 6767;
-    private static CommandManager commandManager;
-    private static ServerNetworkManager networkManager;
-    private static final CollectionManager collectionManager = CollectionManager.getInstance();
-    private static volatile boolean isRunning = true;
-
     public static void main(String[] args) {
-        ExecutionStatus loadStatus = collectionManager.loadCollection();
-        networkManager = new ServerNetworkManager(PORT);
+        try {
+            // 1. Инициализация менеджеров
+            logger.info("Initializing server components...");
 
-        if (!loadStatus.isSuccess()) {
-            logger.severe(loadStatus.getMessage());
+            dbManager = DBManager.getInstance();
+            collectionManager = CollectionManager.getInstance();
+            commandManager = initCommandManager();
+            threadManager = ThreadManager.getInstance();
+
+            // 2. Загрузка коллекции из БД
+            logger.info("Loading collection from database...");
+            ExecutionStatus loadStatus = collectionManager.loadCollection();
+            if (!loadStatus.isSuccess()) {
+                logger.severe("Failed to load collection: " + loadStatus.getMessage());
+                System.exit(1);
+            }
+            logger.info("Collection loaded successfully. Size: " + collectionManager.size());
+
+            // 3. Добавление хука для graceful shutdown
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                logger.info("Shutting down server...");
+                isRunning = false;
+                try {
+                    threadManager.stopServer();
+                } catch (Exception e) {
+                    logger.severe("Error during shutdown: " + e.getMessage());
+                }
+                logger.info("Server stopped");
+            }));
+
+            // 4. Запуск сервера
+            logger.info("Starting server on port " + PORT + "...");
+            threadManager.startServer(commandManager, PORT);
+
+        } catch (Exception e) {
+            logger.severe("Failed to start server: " + e.getMessage());
+            e.printStackTrace();
             System.exit(1);
         }
-
-        commandManager = new CommandManager() {{
-            register("help",new Help(this));
-            register("info",new Info());
-            register("show",new Show());
-            register("add",new Add());
-            register("head", new Head());
-            register("add_if_min", new AddIfMin());
-            register("add_if_max", new AddIfMax());
-            register("count_less_than_description", new CountLessThanDescription());
-            register("filter_greater_than_genre", new FilterGreaterThanGenre());
-            register("remove_by_id", new RemoveById());
-            register("update", new Update());
-            register("clear", new Clear());
-            register("filter_contains_name", new FilterContainsName());
-            register("execute_script", new ExecuteScript());
-        }};
-
-        Executer executer = new Executer(commandManager);
-
-        run(executer);
     }
 
-    public static void run(Executer executer) {
-        try {
-            networkManager.startServer();
-            logger.info("Server started");
+    private static CommandManager initCommandManager() {
+        CommandManager manager = new CommandManager();
 
-            while (isRunning) {
-                Socket clientSocket = null;
-                try {
-                    clientSocket = networkManager.acceptConnection();
-                    sendCommandsToClient(clientSocket);
+        // Команды аутентификации (не требуют предварительного логина)
+        manager.register("register", new Register());
+        manager.register("login", new Login());
+
+        // Основные команды
+        manager.register("help", new Help(manager));
+        manager.register("info", new Info());
+        manager.register("show", new Show());
+        manager.register("add", new Add());
+        manager.register("head", new Head());
+        manager.register("update", new Update());
+        manager.register("remove_by_id", new RemoveById());
+        manager.register("clear", new Clear());
+        manager.register("add_if_min", new AddIfMin());
+        manager.register("add_if_max", new AddIfMax());
+        manager.register("count_less_than_description", new CountLessThanDescription());
+        manager.register("filter_greater_than_genre", new FilterGreaterThanGenre());
+        manager.register("filter_contains_name", new FilterContainsName());
 
 
-                    boolean clientConnected = true;
-                    while (clientConnected && isRunning) {
-                        try {
-                            Request request = networkManager.receive(clientSocket);
-
-
-                            String[] commandParts = request.getCommand();
-                            ExecutionStatus executionStatus = executer.runCommand(commandParts, request.getBand());
-
-                            Response response = new Response(executionStatus);
-
-                            if (!executionStatus.isSuccess()) {
-                                logger.severe(executionStatus.getMessage());
-                            }
-
-                            networkManager.send(response, clientSocket);
-
-                        } catch (IOException e) {
-                            logger.info("Client disconnected: " + e.getMessage());
-                            clientConnected = false;
-                        } catch (ClassNotFoundException e) {
-                            logger.severe("Error deserializing request: " + e.getMessage());
-                        }
-                    }
-
-                } catch (IOException e) {
-                    if (isRunning) {
-                        logger.severe("Error accepting client connection: " + e.getMessage());
-                    }
-                } finally {
-                    if (clientSocket != null) {
-                        networkManager.closeConnection(clientSocket);
-                    }
-                }
-            }
-
-        } catch (IOException e) {
-            logger.severe("Error while running the server: " + e.getMessage());
-        }
-    }
-    private static void sendCommandsToClient(Socket clientSocket) {
-        try {
-            Map<String, Pair<ArgumentValidator, Boolean>> commandsData = new HashMap<>();
-            for (Map.Entry<String, Command> entry : commandManager.getCommandsMap().entrySet()) {
-                boolean isAskingCommand = AskingCommand.class.isAssignableFrom(entry.getValue().getClass());
-                commandsData.put(entry.getKey(), new Pair<>(entry.getValue().getArgumentValidator(), isAskingCommand));
-            }
-
-            Response commandsResponse = new Response(commandsData);
-            networkManager.send(commandsResponse, clientSocket);
-
-        } catch (IOException e) {
-            logger.severe("Error sending command list to client: " + e.getMessage());
-        }
+        logger.info("Registered " + manager.getCommandsMap().size() + " commands");
+        return manager;
     }
 
+    public static boolean isRunning() {
+        return isRunning;
+    }
+
+    public static void stopServer() {
+        isRunning = false;
+    }
+
+    public static CollectionManager getCollectionManager() {
+        return collectionManager;
+    }
+
+    public static CommandManager getCommandManager() {
+        return commandManager;
+    }
 }

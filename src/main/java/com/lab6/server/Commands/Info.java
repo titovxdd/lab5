@@ -1,5 +1,6 @@
 package com.lab6.server.Commands;
 
+import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.client.sup.Console;
@@ -13,7 +14,7 @@ public class Info extends Command{
 
 
     @Override
-    public ExecutionStatus execute(String argument) {
+    public ExecutionStatus execute(String argument, Pair<String, String> user) {
         String infoMessage = "Тип коллекции: " + collectionManager.getBands().getClass().getName() +
                 "\nДата инициализации: " + collectionManager.getInitializationDate() +
                 "\nДата последнего сохранения: " + collectionManager.getLastSaveDate() +
