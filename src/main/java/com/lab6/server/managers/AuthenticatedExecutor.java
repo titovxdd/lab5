@@ -5,20 +5,21 @@ import com.lab6.common.Sup.Pair;
 import com.lab6.common.models.MusicBand;
 import com.lab6.server.Server;
 
-public class AuthenticatedExecutor {
+public class AuthenticatedExecutor implements ExecutorInterface{
     private final Executor executor;
 
     public AuthenticatedExecutor(Executor executor) {
         this.executor = executor;
     }
 
+    @Override
     public ExecutionStatus runCommand(String[] command, MusicBand band, Pair<String, String> user) {
         ExecutionStatus authStatus;
         if (command[0].equals("register") || command[0].equals("login")) {
             if ("register".equals(command[0])) {
-                authStatus = DBManager.getInstance().addUser(user);  // Регистрация
+                authStatus = DBManager.getInstance().addUser(user);  
             } else {
-                authStatus = DBManager.getInstance().checkPassword(user);  // Вход
+                authStatus = DBManager.getInstance().checkPassword(user);  
             }
             if (authStatus.isSuccess()) {
                 Server.logger.info(authStatus.getMessage() + " User: " + user.getFirst());

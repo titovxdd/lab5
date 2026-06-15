@@ -1,185 +1,277 @@
 @startuml
-
-top to bottom direction
-skinparam linetype ortho
-
-
-
-
-class BandAsker {
-  + askBand(Console, Long): MusicBand
-  - askFrontMan(Console): Studio
-  - askCoordinates(Console): Coordinates
+package lab-client {
+    class Asker {
+      + askBand(Console, Long): MusicBand
+      - askPerson(Console): Person
+      - askCoordinates(Console): Coordinates
+    }
+    class Client {
+      - ClientnetworkManager: ClientNetworkManager
+      - attempts: int
+      - SERVER_PORT: int
+      - scriptStackCounter: int
+      - console: Console
+      - commandsData: Map<String, Pair<ArgumentValidator, Boolean>>
+      - SERVER_HOST: String
+      - askingRequest(Console, String): Request
+      - validateCommand(String[]): ExecutionStatus
+      + main(String[]): void
+      - prepareRequest(Console, String): Request
+      - runScript(String): ExecutionStatus
+    }
+    interface Console << interface >> {
+      + println(Object): void
+      + printError(Object): void
+      + readln(): String
+      + print(Object): void
+    }
+    class ElementValidator {
+      + validating(MusicBand): Pair<ExecutionStatus, MusicBand>
+      + validateAsking(Console, Long): Pair<ExecutionStatus, MusicBand>
+    }
+    class FileConsole {
+      - input: BufferedReader
+      + print(Object): void
+      + readln(): String
+      + printError(Object): void
+      + println(Object): void
+    }
+    class ClientNetworkManager {
+      - channel: SocketChannel
+      - PORT: int
+      - SERVER_HOST: String
+      + connect(): void
+      + close(): void
+      + receive(): Response
+      + send(Request): void
+    }
+    class StandartConsole {
+      + println(Object): void
+      + print(Object): void
+      + printError(Object): void
+      + readln(): String
+    }
 }
 
-enum Color <<enum>>{
-    + RED
-    + BLACK
-    + BLUE
-    + YELLOW
-    + BROWN
-    + valueOf(String): MusicGenre
-    + list(): String
-    + values(): MusicGenre[]
+package lab-common {
+    class ArgumentValidator {
+      + validate(String, String): ExecutionStatus
+    }
+    class Coordinates {
+      - serialVersionUID: long
+      - y: Integer
+      - x: double
+      + equals(Object): boolean
+      + getX(): double
+      + toString(): String
+      + hashCode(): int
+      + validate(): boolean
+      + getY(): Integer
+    }
+    class Element {
+      + getID(): Long
+    }
+    class EmptyValidator {
+      - serialVersionUID: long
+      + validate(String, String): ExecutionStatus
+    }
+    class ExecutionStatus {
+      - serialVersionUID: long
+      - message: String
+      - status: boolean
+      - collection: Stack<MusicBand>
+      + isSuccess(): boolean
+      + getCollection(): Stack<MusicBand>
+      + getMessage(): String
+    }
+    class GenreValidator {
+      - serialVersionUID: long
+      + validate(String, String): ExecutionStatus
+    }
+    class IdValidator {
+      - serialVersionUID: long
+      + validate(String, String): ExecutionStatus
+    }
+    class MusicBand {
+      - description: String
+      - serialVersionUID: long
+      - name: String
+      - creationDate: LocalDateTime
+      - albumsCount: Long
+      - person: Person
+      - numberOfParticipants: Long
+      - id: Long
+      - coordinates: Coordinates
+      - genre: MusicGenre
+      + toArray(MusicBand): String[]
+      + hashCode(): int
+      + getId(): Long
+      + toString(): String
+      + getGenre(): MusicGenre
+      + validate(): boolean
+      + fromArray(String[]): MusicBand
+      + getName(): String
+      + compareTo(Element): int
+      + getAlbumsCount(): Long
+      + equals(Object): boolean
+      + getCreationDate(): LocalDateTime
+      + getNumberOfParticipants(): Long
+      + updateId(Long): void
+      + getDescription(): String
+      + getPerson(): Person
+      + getCoordinates(): Coordinates
+      + getID(): Long
+    }
+    enum MusicGenre << enumeration >> {
+      + ROCK:
+      + POP:
+      + values(): MusicGenre[]
+      + valueOf(String): MusicGenre
+      + list(): String
+    }
+    class Pair<A, B> {
+      - b: B
+      - serialVersionUID: long
+      - a: A
+      + setSecond(B): void
+      + getFirst(): A
+      + setFirst(A): void
+      + getSecond(): B
+    }
+    class Request {
+      - string: String
+      - serialVersionUID: long
+      - band: MusicBand
+      + getCommand(): String[]
+      + getBand(): MusicBand
+      + toString(): String
+    }
+    class Response {
+      - serialVersionUID: long
+      - executionStatus: ExecutionStatus
+      - commandsData: Map<String, Pair<ArgumentValidator, Boolean>>
+      + toString(): String
+      + getCommandsMap(): Map<String, Pair<ArgumentValidator, Boolean>>
+      + getExecutionStatus(): ExecutionStatus
+    }
+    class Person {
+      - name: String
+      - serialVersionUID: long
+      + validate(): boolean
+      + toString(): String
+      + equals(Object): boolean
+      + getName(): String
+      + hashCode(): int
+    }
+    interface Validatable << interface >> {
+      + validate(): boolean
+    }
 }
 
-class CommandParser {
- +parse(String) Pair<Command, String arg>
+package lab-server {
+
+    class AskingCommand<T> {
+      # runInternal(String): ExecutionStatus
+      + run(String): ExecutionStatus
+      + run(String, MusicBand): ExecutionStatus
+      # runInternal(MusicBand): ExecutionStatus
+    }
+
+    class CollectionManager {
+      - bands: Map<Long, MusicBand>
+      - dumpManager: DumpManager
+      - lastSaveDate: LocalDateTime
+      - collection: Stack<MusicBand>
+      - instance: CollectionManager
+      - initializationDate: LocalDateTime
+      - id: Long
+      + getFreeId(): Long
+      + getBands(): Stack<MusicBand>
+      + getInitializationDate(): LocalDateTime
+      + getById(Long): MusicBand
+      + sort(): void
+      + add(MusicBand): boolean
+      + loadCollection(): ExecutionStatus
+      + clear(): void
+      + getCollection(): Stack<MusicBand>
+      + saveCollection(): void
+      + removeAllByGenre(MusicGenre): int
+      + removeFirst(): void
+      + getLastSaveDate(): LocalDateTime
+      + getInstance(): CollectionManager
+      + removeById(Long): void
+    }
+    class Command<T> {
+      + argumentValidator: T
+      # collectionManager: CollectionManager
+      - nameAndDescription: Pair<String, String>
+      + run(String): ExecutionStatus
+      + hashCode(): int
+      + getArgumentValidator(): T
+      # runInternal(String): ExecutionStatus
+      + equals(Object): boolean
+      + getDescription(): String
+      + toString(): String
+      + getName(): String
+    }
+    class CommandManager {
+      - commands: Map<String, Command<?>>
+      + getCommand(String): Command<?>
+      + getCommandsMap(): Map<String, Command<?>>
+      + register(String, Command<?>): void
+    }
+
+    class DumpManager {
+      - instance: DumpManager
+      - filePath: String
+      + getInstance(): DumpManager
+      + WriteCollection(Stack<MusicBand>): ExecutionStatus
+      + ReadCollection(Stack<MusicBand>): ExecutionStatus
+    }
+
+    class Executer {
+      - commandManager: CommandManager
+      - validateCommand(String[]): ExecutionStatus
+      + runCommand(String[], MusicBand): ExecutionStatus
+    }
+
+    class Server {
+      - response: Response
+      - selector: Selector
+      - collectionManager: CollectionManager
+      + logger: Logger
+      - isRunning: boolean
+      - commandManager: CommandManager
+      - PORT: int
+      - networkManager: ServerNetworkManager
+      + run(Executer): void
+      - getConsoleHandler(): ConsoleHandler
+      - initLogger(): void
+      + main(String[]): void
+      - InitialCommandsData(SocketChannel, SelectionKey): void
+    }
+    class ServerNetworkManager {
+      - serverChannel: ServerSocketChannel
+      - PORT: int
+      + receive(SocketChannel, SelectionKey): Request
+      + close(): void
+      + startServer(): void
+      + getServerSocketChannel(): ServerSocketChannel
+      + send(Response, SocketChannel): void
+    }
+
 }
 
-class Context {
-  - Bands: Map<Long, MusicBand>
-  - id: Long
-  - collection: PriorityQueue<MusicBand>
-  + saveCollection(): void
-  + clear(): void
-  + add(MusicBand): boolean
-  + getBands(): Stack<MusicBand>
-  + removeById(Long): void
-  + sort(): void
-  + getFreeId(): Long
-  + getById(Long): MusicBand
-  + getCollection(): Stack<MusicBand>
-  + loadCollection(): Status
-  + removeFirst(): void
-}
-class Command {
-  - nameAndDescription: Pair<String, String>
-  # console: Console
-  + getDescription(): String
-  + getName(): String
-  + hashCode(): int
-  # execute(String): Status
-  + toString(): String
-  + equals(Object): boolean
-}
-class Commands {
-  - commands: Map<String, Command>
-  + getCommandsMap(): Map<String, Command>
-  + getCommand(String): Command
-  + register(String, Command): void
-}
-
-interface Console << interface >> {
-  + println(Object): void
-  + print(Object): void
-  + printError(Object): void
-  + readln(): String
-  + printTable(Object, Object): void
-}
-class Coordinates {
-  - x: double
-  - y: Integer
-  + toString(): String
-  + getY(): Integer
-  + equals(Object): boolean
-  + hashCode(): int
-  + getX(): double
-  + validate(): boolean
-}
-
-class Element {
-  + getID(): Long
-  + validate() boolean
-}
-
-
-class Executer {
-  - scriptStackCounter: int
-  - console: Console
-  + liveInput(): void
-  - runCommand(Pair<Command, String arg>): Status
-}
-class Status {
-  - status: Pair<Boolean, String>
-  + getMessage(): String
-  + isSuccess(): boolean
-}
-
-class FileConsole {
-  - input: java.util.Scanner
-  + printError(Object): void
-  + printTable(Object, Object): void
-  + print(Object): void
-  + println(Object): void
-  + readln(): String
-}
-
-class Main {
-  + main(String[]): void
-}
-class MusicBand {
-  - description: String
-  - frontMan: Person
-  - id: Long
-  - creationDate: java.util.Date
-  - singlesCount: Long
-  - name: String
-  - genre: MusicGenre
-  - numberOfParticipants: Long
-  - coordinates: Coordinates
-  + toString(): String
-  + toArray(MusicBand): String[]
-  + getNumberOfParticipants(): Long
-  + getCoordinates(): Coordinates
-  + hashCode(): int
-  + getID(): Long
-  + getCreationDate(): java.util.Date
-  + getGenre(): MusicGenre
-  + getSinglesCount(): Long
-  + equals(Object): boolean
-  + validate(): boolean
-  + fromArray(String[]): MusicBand
-  + getDescription(): String
-  + getFrontMan(): Studio
-  + compareTo(Element): int
-  + getName(): String
-}
-enum MusicGenre << enum >> {
-  + PSYCHEDELIC_ROCK
-  + POP
-  + MATH_ROCK
-  + PUNK_ROCK
-  + valueOf(String): MusicGenre
-  + list(): String
-  + values(): MusicGenre[]
-}
-class Pair<A, B> {
-  - a: A
-  - b: B
-  + setFirst(A): void
-  + getFirst(): A
-  + setSecond(B): void
-  + getSecond(): B
-}
-
-class StandartConsole {
-  + printTable(Object, Object): void
-  + println(Object): void
-  + print(Object): void
-  + printError(Object): void
-  + readln(): String
-}
-class Person {
-  - name: String
-  - eyeColor: Color
-  - birthday: java.time.LocalDate
-  + equals(Object): boolean
-  + toString(): String
-  + getEyeColor(): String
-  + getName(): String
-  + getBirthday(): java.time.LocalDate
-  + hashCode(): int
-}
-
-
-FileConsole  -[#008200,dashed]-^  Console
-FileConsole  -[#000000,plain]-^  CommandParser: Подают команды
-StandartConsole -[#000000,plain]-^  CommandParser
-MusicBand -[#000000,plain]-^  Element
-Executer -[#000000,plain]-^   Main :Запускает режим ввода команд
-StandartConsole -[#008200,dashed]-^  Console:Отвечают за считывание и вывод данных
-Executer  -[#000000,plain]-^ Context:Изменяет в результате работы команд
-CommandParser -[#000000,plain]-^ Commands:Ищет нужную команду
-Commands -[#000000,plain]-^ Executer:Выполняет команду
+AskingCommand                    -[#595959,dashed]->  ArgumentValidator
+AskingCommand                    -[#000082,plain]-^  Command
+Command                          -[#595959,dashed]->  ArgumentValidator
+Coordinates                      -[#008200,dashed]-^  Validatable
+Element                          -[#008200,dashed]-^  Validatable
+EmptyValidator                   -[#000082,plain]-^  ArgumentValidator
+FileConsole                      -[#008200,dashed]-^  Console
+GenreValidator                   -[#000082,plain]-^  ArgumentValidator
+IdValidator                      -[#000082,plain]-^  ArgumentValidator
+MusicBand                        -[#000082,plain]-^  Element
+StandartConsole                  -[#008200,dashed]-^  Console
+Person                           -[#008200,dashed]-^  Validatable
 @enduml

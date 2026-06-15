@@ -1,10 +1,12 @@
 package com.lab6.client.managers;
 
+import com.lab6.client.Client;
 import com.lab6.common.models.*;
 import com.lab6.client.sup.Console;
 import com.lab6.client.sup.FileConsole;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 
 public class BandAsker {
@@ -132,7 +134,8 @@ public class BandAsker {
         return new Coordinates(x, y);
     }
 
-    public static MusicBand askBand(Console console, Long id) throws Breaker, IllegalInputException {
+    public static MusicBand askBand(Console console) throws Breaker, IllegalInputException {
+        MusicBandBuilder builder = new MusicBandBuilder();
         String name;
         do {
             console.println("Введите значение поля name:");
@@ -141,16 +144,12 @@ public class BandAsker {
                 throw new Breaker();
             }
         } while (name.isEmpty());
+        builder.setName(name);
 
-        Coordinates coordinates = askCoordinates(console);
+        builder.setCoordinates(askCoordinates(console));
 
-        Long numberOfParticipants = -1L;
+        Long numberOfParticipants;
         do {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
             console.println("Введите значение поля numberOfParticipants:");
             try {
                 String input = console.readln();
@@ -163,38 +162,35 @@ public class BandAsker {
                 numberOfParticipants = -1L;
             }
             if (numberOfParticipants <= 0) {
-                if (console instanceof FileConsole){
-                    throw new IllegalInputException("Некорректное значение поля numberOfParticipants\nЗначение поля должно быть больше 0");
+                if (console instanceof FileConsole) {
+                    throw new IllegalInputException("Некорректное значение поля numberOfParticipants!\nЗначение поля должно быть больше 0");
                 }
-                console.printError("Некорректное значение поля numberOfParticipants\nЗначение поля должно быть больше 0");
+                console.printError("Некорректное значение поля numberOfParticipants!\nЗначение поля должно быть больше 0");
             }
         } while (numberOfParticipants <= 0);
+        builder.setNumberOfParticipants(numberOfParticipants);
 
-        Long singlesCount = -1L;
+        Long albumsCount;
         do {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
             console.println("Введите значение поля singlesCount:");
             try {
                 String input = console.readln();
                 if (input.equals("exit")) {
                     throw new Breaker();
                 } else {
-                    singlesCount = Long.valueOf(input);
+                    albumsCount = Long.valueOf(input);
                 }
             } catch (NumberFormatException e) {
-                singlesCount = -1L;
+                albumsCount = -1L;
             }
-            if (singlesCount <= 0) {
-                if (console instanceof FileConsole){
-                    throw new IllegalInputException("Некорректное значение поля singlesCount\nЗначение поля должно быть больше 0");
+            if (albumsCount <= 0) {
+                if (console instanceof FileConsole) {
+                    throw new IllegalInputException("Некорректное значение поля singlesCount!\nЗначение поля должно быть больше 0");
                 }
-                console.printError("Некорректное значение поля singlesCount\nЗначение поля должно быть больше 0");
+                console.printError("Некорректное значение поля singlesCount!\nЗначение поля должно быть больше 0");
             }
-        } while (singlesCount <= 0);
+        } while (albumsCount <= 0);
+        builder.setSinglesCount(albumsCount);
 
         String description;
         do {
@@ -204,14 +200,10 @@ public class BandAsker {
                 throw new Breaker();
             }
         } while (description.isEmpty());
+        builder.setDescription(description);
 
         MusicGenre genre = null;
         do {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
             console.println("Введите значение поля genre:");
             console.println("Список возможных значений: " + MusicGenre.list());
             String input = console.readln();
@@ -221,21 +213,17 @@ public class BandAsker {
                 try {
                     genre = MusicGenre.valueOf(input);
                 } catch (IllegalArgumentException e) {
-                    if (console instanceof FileConsole){
-                        throw new IllegalArgumentException("Некорректное значение поля genre");
+                    if (console instanceof FileConsole) {
+                        throw new IllegalArgumentException("Некорректное значение поля genre!");
                     }
-                    console.printError("Некорректное значение поля genre");
+                    console.printError("Некорректное значение поля genre!");
                 }
             }
         } while (genre == null);
+        builder.setGenre(genre);
+        builder.setFrontMan(askPerson(console));
 
-        Person person = askPerson(console);
-
-        MusicBand band = new MusicBand(id, name, LocalDate.now(), numberOfParticipants, description, coordinates, singlesCount, genre, person);
-        if (band == null || !(band.validate())){
-            System.out.println(band.toString());
-        }
-        return band;
+        return builder.setUser(Client.getCurrentUser().getFirst()).setCreationDate(LocalDate.now()).build();
     }
 
 }

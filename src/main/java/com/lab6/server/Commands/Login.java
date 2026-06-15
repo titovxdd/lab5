@@ -8,7 +8,7 @@ import com.lab6.server.managers.DBManager;
 public class Login extends Command{
 
     public Login(){
-        super("login", "", new EmptyValidator());
+        super("login", "пропуск в систему", new EmptyValidator());
     }
     @Override
     public ExecutionStatus execute(String arg, Pair<String, String> user) {

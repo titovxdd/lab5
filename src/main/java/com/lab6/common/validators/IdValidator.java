@@ -4,13 +4,16 @@ import com.lab6.common.Sup.ExecutionStatus;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.Arrays;
 
 public class IdValidator extends ArgumentValidator implements Serializable {
     @Serial
     private static final long serialVersionUID = 109L;
 
     @Override
-    public ExecutionStatus validate(String arg) {
+    public ExecutionStatus validate(String arg, String name) {
+        arg = arg.trim();
+
         if (arg.isEmpty()) {
             return new ExecutionStatus(false, "У команды должен быть аргумент (id элемента коллекции)");
         }

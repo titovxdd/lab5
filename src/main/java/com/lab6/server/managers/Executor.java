@@ -8,7 +8,7 @@ import com.lab6.server.Server;
 import com.lab6.common.models.MusicBand;
 import com.lab6.common.Sup.ExecutionStatus;
 
-public class Executor {
+public class Executor implements ExecutorInterface{
     private final CommandManager commandManager;
 
     public Executor(CommandManager commandManager) {
@@ -28,6 +28,8 @@ public class Executor {
             return new ExecutionStatus(false, "Введено недостаточно аргументов для выполнения последней команды.");
         }
     }
+
+    @Override
     public ExecutionStatus runCommand(String[] userCommand, MusicBand musicBand, Pair<String, String> user) {
         ExecutionStatus validateStatus = validateCommand(userCommand);
         if (validateStatus.isSuccess()) {

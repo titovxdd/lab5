@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class UserPermissionValidator extends ArgumentValidator implements Serializable {
     @Serial
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 994L;
 
     @Override
     public ExecutionStatus validate(String arg, String name) {

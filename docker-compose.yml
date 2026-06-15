@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: lab7-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+      POSTGRES_DB: studs
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build: .
+    container_name: lab7-server
+    ports:
+      - "6767:6767"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./dbconfig.properties:/app/dbconfig.properties:ro
+    healthcheck:
+      test: [ "CMD-SHELL", "netstat -an | grep 6767 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  client:
+    build: .
+    container_name: lab7-client
+    environment:
+      - SERVER_HOST=host.docker.internal
+      - SERVER_PORT=6767
+    stdin_open: true
+    tty: true
+    depends_on:
+      - server
+    network_mode: "host"
+    command: [ "java", "-cp", "client.jar", "com.lab6.client.Client" ]
+
+volumes:
+  postgres_data:

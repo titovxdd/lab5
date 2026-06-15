@@ -42,7 +42,7 @@ public final class Server {
 
     public static void main(String[] args) {
         try {
-            // 1. Инициализация менеджеров
+            
             logger.info("Initializing server components...");
 
             dbManager = DBManager.getInstance();
@@ -50,7 +50,7 @@ public final class Server {
             commandManager = initCommandManager();
             threadManager = ThreadManager.getInstance();
 
-            // 2. Загрузка коллекции из БД
+            
             logger.info("Loading collection from database...");
             ExecutionStatus loadStatus = collectionManager.loadCollection();
             if (!loadStatus.isSuccess()) {
@@ -59,7 +59,7 @@ public final class Server {
             }
             logger.info("Collection loaded successfully. Size: " + collectionManager.size());
 
-            // 3. Добавление хука для graceful shutdown
+            
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 logger.info("Shutting down server...");
                 isRunning = false;
@@ -71,9 +71,15 @@ public final class Server {
                 logger.info("Server stopped");
             }));
 
-            // 4. Запуск сервера
+            
             logger.info("Starting server on port " + PORT + "...");
             threadManager.startServer(commandManager, PORT);
+            try {
+                Thread.currentThread().join();
+            } catch (InterruptedException e) {
+                logger.warning("Server main thread interrupted");
+                Thread.currentThread().interrupt();
+            }
 
         } catch (Exception e) {
             logger.severe("Failed to start server: " + e.getMessage());
@@ -85,11 +91,11 @@ public final class Server {
     private static CommandManager initCommandManager() {
         CommandManager manager = new CommandManager();
 
-        // Команды аутентификации (не требуют предварительного логина)
+        
         manager.register("register", new Register());
         manager.register("login", new Login());
 
-        // Основные команды
+        
         manager.register("help", new Help(manager));
         manager.register("info", new Info());
         manager.register("show", new Show());

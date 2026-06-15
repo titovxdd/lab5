@@ -11,7 +11,8 @@ public class GenreValidator extends ArgumentValidator implements Serializable {
     private static final long serialVersionUID = 108L;
 
     @Override
-    public ExecutionStatus validate(String arg) {
+    public ExecutionStatus validate(String arg, String name) {
+        arg = arg.trim();
         if (arg.isEmpty()) {
             return new ExecutionStatus(false, "У команды должен быть аргумент (genre)");
         }

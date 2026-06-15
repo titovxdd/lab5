@@ -10,7 +10,8 @@ public enum CommandNames {
     UPDATE("update", "обновить значение элемента коллекции, id которого равен заданному", PermissionType.USER),
     REMOVE_BY_ID("remove_by_id", "удалить элемент из коллекции по его id", PermissionType.USER),
     CLEAR("clear", "очистить коллекцию", PermissionType.USER),
-    REMOVE_FIRST("remove_first", "удалить первый элемент из коллекции", PermissionType.USER),
+    HEAD("head", "показать первый элемент из коллекции", PermissionType.USER),
+    FILTER_GREATER_THAN_GENRE("filter_greater_than_genre", "вывести элементы, значение поля genre которых больше заданного", PermissionType.USER),
     ADD_IF_MIN("add_if_min", "добавить новый элемент в коллекцию, если его значение меньше, чем у наименьшего элемента этой коллекции", PermissionType.USER),
     SORT("sort", "отсортировать коллекцию в естественном порядке", PermissionType.MODERATOR),
     UPDATE_USER_PERMISSION("update_user_permission", "обновить права пользователя в системе", PermissionType.ADMIN);

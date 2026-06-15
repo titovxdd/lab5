@@ -7,9 +7,11 @@ import com.lab6.common.models.MusicBand;
 import com.lab6.client.sup.Console;
 import com.lab6.common.Sup.ExecutionStatus;
 
+import java.util.ArrayList;
+
 public class Show extends Command {
 
-    public Show(){
+    public Show() {
         super("show", "вывести в стандартный поток вывода все элементы коллекции в строковом представлении", new EmptyValidator());
     }
 
@@ -18,6 +20,8 @@ public class Show extends Command {
         if (collectionManager.getCollection().isEmpty()) {
             return new ExecutionStatus(true, "Коллекция пуста.\n");
         }
-        return new ExecutionStatus(true, collectionManager.getCollection());
+
+        var listToSend = new ArrayList<>(collectionManager.getCollection());
+        return new ExecutionStatus(true, listToSend.toString());
     }
 }

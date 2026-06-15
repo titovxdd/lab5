@@ -15,7 +15,7 @@ public class Info extends Command{
 
     @Override
     public ExecutionStatus execute(String argument, Pair<String, String> user) {
-        String infoMessage = "Тип коллекции: " + collectionManager.getBands().getClass().getName() +
+        String infoMessage = "Тип коллекции: java.util.PriorityQueue" +
                 "\nДата инициализации: " + collectionManager.getInitializationDate() +
                 "\nДата последнего сохранения: " + collectionManager.getLastSaveDate() +
                 "\nКоличество элементов: " + collectionManager.getBands().size() +

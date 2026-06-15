@@ -6,6 +6,7 @@ import com.lab6.common.Sup.Response;
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.channels.Channels;
 import java.nio.channels.SocketChannel;
 
 public class ClientNetworkManager {
@@ -13,91 +14,77 @@ public class ClientNetworkManager {
     private final String SERVER_HOST;
     private SocketChannel channel;
 
+    
+    private ObjectOutputStream objectOut;
+
     public ClientNetworkManager(int port, String host) {
         this.PORT = port;
         this.SERVER_HOST = host;
     }
 
+    
     public void connect() throws IOException {
         channel = SocketChannel.open();
-        channel.configureBlocking(false);
+        
         channel.connect(new InetSocketAddress(SERVER_HOST, PORT));
 
-        while (!channel.finishConnect()) {
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new IOException("Connection interrupted", e);
-            }
-        }
-
+        
+        
+        objectOut = new ObjectOutputStream(Channels.newOutputStream(channel));
     }
 
-    public void close() throws IOException {
-        if (channel != null && channel.isOpen()) {
-            channel.close();
-        }
-    }
-
+    
     public void send(Request request) throws IOException {
-        ByteArrayOutputStream breq = new ByteArrayOutputStream();
-        try (ObjectOutputStream req = new ObjectOutputStream(breq)) {
-            req.writeObject(request);
-        }
-
-        byte[] data = breq.toByteArray();
-
-        ByteBuffer dataBuffer = ByteBuffer.wrap(data);
-        while (dataBuffer.hasRemaining()) {
-            channel.write(dataBuffer);
-        }
+        objectOut.writeObject(request);
+        
+        objectOut.reset();
+        objectOut.flush();
     }
 
+    
     public Response receive() throws IOException, ClassNotFoundException {
+        
+        channel.socket().setSoTimeout(5000);
+
         ByteBuffer lengthBuffer = ByteBuffer.allocate(4);
         while (lengthBuffer.hasRemaining()) {
-            int read = channel.read(lengthBuffer);
-            if (read == -1) {
-                throw new IOException("Server closed connection");
-            }
-            if (read == 0) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new IOException("Interrupted while reading data", e);
-                }
-                continue;
+            if (channel.read(lengthBuffer) == -1) {
+                throw new EOFException("Сервер закрыл соединение");
             }
         }
         lengthBuffer.flip();
         int length = lengthBuffer.getInt();
 
+        
         ByteBuffer dataBuffer = ByteBuffer.allocate(length);
         while (dataBuffer.hasRemaining()) {
-            int read = channel.read(dataBuffer);
-            if (read == -1) {
-                throw new IOException("Server closed connection while reading data");
-            }
-            if (read == 0) {
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException e) {
-                    Thread.currentThread().interrupt();
-                    throw new IOException("Interrupted while reading data", e);
-                }
-                continue;
+            if (channel.read(dataBuffer) == -1) {
+                throw new EOFException("Сервер закрыл соединение при чтении данных");
             }
         }
+        dataBuffer.flip();
 
-        try (ObjectInputStream input = new ObjectInputStream(
-                new ByteArrayInputStream(dataBuffer.array()))) {
+        
+        byte[] data = new byte[dataBuffer.remaining()];
+        dataBuffer.get(data);
+
+        
+        try (ObjectInputStream input = new ObjectInputStream(new ByteArrayInputStream(data))) {
             return (Response) input.readObject();
         }
     }
 
+    
+    public void close() throws IOException {
+        if (objectOut != null) {
+            objectOut.close();
+        }
+        if (channel != null && channel.isOpen()) {
+            channel.close();
+        }
+    }
+
     public boolean isConnected() {
-        return channel != null && channel.isConnected() && channel.isOpen();
+        return channel != null && channel.isOpen() && channel.socket().isConnected();
     }
 }

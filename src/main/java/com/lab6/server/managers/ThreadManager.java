@@ -55,10 +55,10 @@ public class ThreadManager {
                     Socket clientSocket = serverSocket.accept();
                     Server.logger.info("Client connected: " + clientSocket.getRemoteSocketAddress());
 
-                    // Отправляем список команд (с длиной)
+                    
                     sendCommandsList(clientSocket);
 
-                    // Обрабатываем клиента
+                    
                     handleClient(clientSocket);
 
                 } catch (SocketException e) {
@@ -73,41 +73,40 @@ public class ThreadManager {
         Server.logger.info("Server ready");
     }
 
-    private void sendCommandsList(Socket clientSocket) {
-        writePool.submit(() -> {
-            try {
-                Map<String, Pair<ArgumentValidator, Boolean>> commandsData = new HashMap<>();
-                commandManager.getCommandsMap().forEach((name, cmd) -> {
-                    commandsData.put(name, new Pair<>(
-                            cmd.getArgumentValidator(),
-                            AskingCommand.class.isAssignableFrom(cmd.getClass())
-                    ));
-                });
+    private void sendCommandsList(Socket clientSocket) throws IOException {
+        try {
+            Map<String, Pair<ArgumentValidator, Boolean>> commandsData = new HashMap<>();
+            commandManager.getCommandsMap().forEach((name, cmd) -> {
+                commandsData.put(name, new Pair<>(
+                        cmd.getArgumentValidator(),
+                        AskingCommand.class.isAssignableFrom(cmd.getClass())
+                ));
+            });
 
-                // ✅ Отправка с длиной (как в ServerNetworkManager.send)
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
-                    oos.writeObject(new Response(commandsData));
-                }
-                byte[] data = baos.toByteArray();
-
-                DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
-                dos.writeInt(data.length);
-                dos.write(data);
-                dos.flush();
-
-                Server.logger.info("Commands list sent");
-            } catch (IOException e) {
-                Server.logger.severe("Failed to send commands list: " + e.getMessage());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
+                oos.writeObject(new Response(commandsData));
             }
-        });
+            byte[] data = baos.toByteArray();
+
+            
+            DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
+            dos.writeInt(data.length);
+            dos.write(data);
+            dos.flush();
+
+            Server.logger.info("Commands list sent (sync)");
+        } catch (IOException e) {
+            Server.logger.severe("Failed to send commands list: " + e.getMessage());
+            throw e; 
+        }
     }
 
     private void handleClient(Socket clientSocket) {
         readPool.submit(() -> {
             while (running && !clientSocket.isClosed()) {
                 try {
-                    // ✅ Приём запроса БЕЗ длины (как в ServerNetworkManager.receive)
+                    
                     Request request = receiveRequest(clientSocket);
                     Server.logger.info("Request received: " + request);
 
@@ -117,7 +116,6 @@ public class ThreadManager {
                         Response response = processRequest(finalRequest);
 
                         writePool.submit(() -> {
-                            // ✅ Отправка ответа С длиной (как в ServerNetworkManager.send)
                             sendResponse(clientSocket, response);
                         });
                     });
@@ -135,12 +133,9 @@ public class ThreadManager {
         });
     }
 
-    /**
-     * Приём запроса БЕЗ длины (через ObjectInputStream)
-     * Соответствует ServerNetworkManager.receive()
-     */
+    
     private Request receiveRequest(Socket clientSocket) throws IOException, ClassNotFoundException {
-        // ✅ Создаём ObjectInputStream один раз для клиента
+        
         ObjectInputStream ois = getObjectInputStream(clientSocket);
         Request request = (Request) ois.readObject();
 
@@ -151,7 +146,8 @@ public class ThreadManager {
         return request;
     }
 
-    // Хранилище ObjectInputStream для каждого клиента
+
+    
     private final ConcurrentHashMap<Socket, ObjectInputStream> inputStreams = new ConcurrentHashMap<>();
 
     private ObjectInputStream getObjectInputStream(Socket socket) throws IOException {
@@ -179,17 +175,18 @@ public class ThreadManager {
         return new Response(status);
     }
 
-    /**
-     * Отправка ответа С длиной (DataOutputStream + длина)
-     * Соответствует ServerNetworkManager.send()
-     */
+    
     private void sendResponse(Socket clientSocket, Response response) {
         try {
+            Server.logger.info("Sending response...");
+
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
                 oos.writeObject(response);
             }
             byte[] data = baos.toByteArray();
+            Server.logger.info("Response size: " + data.length + " bytes");
+
 
             DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
             dos.writeInt(data.length);
@@ -201,12 +198,11 @@ public class ThreadManager {
             Server.logger.severe("Error sending response: " + e.getMessage());
             closeSocket(clientSocket);
         }
-        // ❗️ НЕ закрываем сокет - клиент может отправить ещё команды
     }
 
     private void closeSocket(Socket socket) {
         try {
-            // Закрываем ObjectInputStream
+            
             ObjectInputStream ois = inputStreams.remove(socket);
             if (ois != null) ois.close();
 

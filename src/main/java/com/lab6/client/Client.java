@@ -1,6 +1,5 @@
 package com.lab6.client;
 
-import com.lab6.client.managers.AuthenticationManager;
 import com.lab6.client.managers.ClientNetworkManager;
 import com.lab6.client.sup.FileConsole;
 import com.lab6.client.sup.StandartConsole;
@@ -31,16 +30,16 @@ public final class Client {
     public static void main(String[] args) {
         do {
             try {
-                // 1. Подключение к серверу
+                
                 networkManager.connect();
                 console.println("Подключено к " + SERVER_HOST + ":" + SERVER_PORT);
 
-                // 2. Получение списка команд от сервера
+                
                 Response commandsResponse = networkManager.receive();
                 commandsData = commandsResponse.getCommandsMap();
                 console.println("Список команд получен от сервера");
 
-                // 3. Аутентификация
+                
                 currentUser = authenticateUser();
                 if (currentUser == null) {
                     console.printError("Не удалось пройти аутентификацию");
@@ -51,7 +50,7 @@ public final class Client {
 
                 connectionAttempts = 1;
 
-                // 4. Основной цикл команд
+                
                 while (true) {
                     console.println("\nВведите команду:");
                     String inputCommand = console.readln().trim();
@@ -102,15 +101,21 @@ public final class Client {
         console.printError("Превышено максимальное количество попыток подключения к серверу.");
     }
 
-    /**
-     * Аутентификация пользователя (register или login)
-     */
+    public static Pair<String, String> getCurrentUser() {
+        return currentUser;
+    }
+    
     private static Pair<String, String> authenticateUser() throws IOException, ClassNotFoundException {
         while (true) {
             console.println("\n=== АУТЕНТИФИКАЦИЯ ===");
             console.println("Введите 'register' для регистрации или 'login' для входа:");
             String command = console.readln().trim().toLowerCase();
 
+            if (command.equals("exit")) {
+                console.println("Завершение работы клиента");
+                networkManager.close();
+                System.exit(0);
+            }
             if (!command.equals("register") && !command.equals("login")) {
                 console.printError("Введите 'register' или 'login'");
                 continue;
@@ -122,7 +127,7 @@ public final class Client {
             console.println("Введите пароль:");
             String password = console.readln().trim();
 
-            // Создаём запрос с пользователем
+            
             Request request = new Request(command, new Pair<>(username, password));
             networkManager.send(request);
 
@@ -137,25 +142,21 @@ public final class Client {
         }
     }
 
-    /**
-     * Подготовка запроса для команд, требующих ввода объекта (add, update)
-     */
+    
     private static Request askingRequest(Console console, String inputCommand, Pair<String, String> user) {
         ElementValidator elementValidator = new ElementValidator();
-        Pair<ExecutionStatus, MusicBand> validationStatusPair = elementValidator.validateAsking(console, 1L);
+        Pair<ExecutionStatus, MusicBand> validationStatusPair = elementValidator.validateAsking(console);
 
         if (!validationStatusPair.getFirst().isSuccess()) {
             console.printError(validationStatusPair.getFirst().getMessage());
             return null;
         } else {
-            // Используем конструктор с band и user
+            
             return new Request(inputCommand, validationStatusPair.getSecond(), user);
         }
     }
 
-    /**
-     * Подготовка запроса в зависимости от команды
-     */
+    
     private static Request prepareRequest(Console console, String inputCommand) {
         String[] commands = (inputCommand.trim() + " ").split(" ", 2);
 
@@ -167,7 +168,7 @@ public final class Client {
         Pair<ArgumentValidator, Boolean> commandInfo = commandsData.get(commands[0]);
 
         if (commandInfo.getSecond()) {
-            // Команда требует построчного ввода (add, update и т.д.)
+            
             return askingRequest(console, inputCommand, currentUser);
         } else if (commands[0].equals("execute_script")) {
             if (commands[1].isEmpty()) {
@@ -181,14 +182,12 @@ public final class Client {
             }
             return null;
         } else {
-            // Обычная команда - используем конструктор только с строкой и user
+            
             return new Request(inputCommand, currentUser);
         }
     }
 
-    /**
-     * Выполнение скрипта
-     */
+    
     private static ExecutionStatus runScript(String fileName) {
         try {
             scriptStackCounter++;
@@ -252,9 +251,7 @@ public final class Client {
         }
     }
 
-    /**
-     * Валидация команды
-     */
+    
     private static ExecutionStatus validateCommand(String[] userCommand) {
         try {
             if (userCommand[0].equals("exit")) {

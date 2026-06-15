@@ -18,7 +18,12 @@ public class RemoveById extends Command{
         if (collectionManager.getById(id) == null) {
             return new ExecutionStatus(false, "Элемент с указанным id не найден!");
         }
-        collectionManager.removeById(id, user);
-        return new ExecutionStatus(true, "Элемент успешно удален!");
+        ExecutionStatus status = collectionManager.removeById(id, user);
+        if (!status.isSuccess()){
+            return new ExecutionStatus(false, "Вы не имеете права!");
+        } else {
+            return new ExecutionStatus(true, "Элемент успешно удален!");
+        }
     }
+
 }

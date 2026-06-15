@@ -51,6 +51,7 @@ public class DBManager {
                          id SERIAL PRIMARY KEY,
                          username VARCHAR(50) UNIQUE NOT NULL,
                          password_hash VARCHAR(96) NOT NULL,
+                         permissions VARCHAR(20) DEFAULT 'USER',
                          created_at TIMESTAMP DEFAULT NOW()
                      );
         """;
@@ -99,13 +100,13 @@ public class DBManager {
         }
     }
 
-    // ==================== РАБОТА С ПОЛЬЗОВАТЕЛЯМИ ====================
+    
 
     public ExecutionStatus addUser(Pair<String, String> user) {
         String query = "INSERT INTO users (username, password_hash) VALUES (?, ?)";
 
         try {
-            // Хэшируем пароль (без соли)
+            
             String hashedPassword = PasswordHasher.hash(user.getSecond());
 
             try (PreparedStatement p = connection.prepareStatement(query)) {
@@ -142,10 +143,7 @@ public class DBManager {
         }
     }
 
-    /**
-     * Проверка прав пользователя
-     * @return ExecutionStatus с permissions (USER или ADMIN)
-     */
+    
     public ExecutionStatus checkUserPermission(Pair<String, String> user) {
         String query = "SELECT permissions FROM users WHERE username = ?";
         try (PreparedStatement p = connection.prepareStatement(query)) {
@@ -172,7 +170,7 @@ public class DBManager {
             if (rs.next()) {
                 String storedHash = rs.getString("password_hash");
 
-                // Хэшируем введённый пароль и сравниваем
+                
                 String inputHash = PasswordHasher.hash(user.getSecond());
 
                 if (inputHash.equals(storedHash)) {
@@ -219,7 +217,7 @@ public class DBManager {
         return false;
     }
 
-    // ==================== РАБОТА С КОЛЛЕКЦИЕЙ ====================
+    
 
     private int insertCoordinates(Coordinates coordinates) throws SQLException {
         String query = "INSERT INTO coordinates (x, y) VALUES (?, ?) RETURNING id";
@@ -391,9 +389,7 @@ public class DBManager {
         }
     }
 
-    /**
-     * Загрузка коллекции в PriorityQueue
-     */
+    
     public ExecutionStatus loadCollection(PriorityQueue<MusicBand> collection) {
         String query = """
             SELECT 

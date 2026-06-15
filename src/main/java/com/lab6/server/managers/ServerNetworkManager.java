@@ -28,20 +28,18 @@ public class ServerNetworkManager {
         Socket clientSocket = serverSocket.accept();
         Server.logger.info("Client connected: " + clientSocket.getRemoteSocketAddress());
 
-        // ✅ Создаём ObjectInputStream для ЧТЕНИЯ (без длины)
+        
         ObjectInputStream ois = new ObjectInputStream(clientSocket.getInputStream());
         inputStreams.put(clientSocket, ois);
 
-        // ✅ Создаём DataOutputStream для ОТПРАВКИ (с длиной)
+        
         DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
         outputStreams.put(clientSocket, dos);
 
         return clientSocket;
     }
 
-    /**
-     * Получение запроса БЕЗ длины (прямое чтение ObjectInputStream)
-     */
+    
     public Request receive(Socket clientSocket) throws IOException, ClassNotFoundException {
         ObjectInputStream input = inputStreams.get(clientSocket);
         if (input == null) {
@@ -50,23 +48,21 @@ public class ServerNetworkManager {
         return (Request) input.readObject();
     }
 
-    /**
-     * Отправка ответа С длиной (DataOutputStream + длина)
-     */
+    
     public void send(Response response, Socket clientSocket) throws IOException {
         DataOutputStream dos = outputStreams.get(clientSocket);
         if (dos == null) {
             throw new IOException("No output stream for client");
         }
 
-        // Сериализуем ответ в байты
+        
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         try (ObjectOutputStream oos = new ObjectOutputStream(baos)) {
             oos.writeObject(response);
         }
         byte[] data = baos.toByteArray();
 
-        // Отправляем длину, затем данные
+        
         dos.writeInt(data.length);
         dos.write(data);
         dos.flush();

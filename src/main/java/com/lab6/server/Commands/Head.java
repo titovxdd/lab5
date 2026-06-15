@@ -2,6 +2,7 @@ package com.lab6.server.Commands;
 
 import com.lab6.common.Sup.Pair;
 import com.lab6.common.validators.EmptyValidator;
+import com.lab6.server.Server;
 import com.lab6.server.managers.CollectionManager;
 import com.lab6.client.sup.Console;
 import com.lab6.common.Sup.ExecutionStatus;
@@ -13,6 +14,7 @@ public class Head extends Command{
     }
 
     public ExecutionStatus execute(String arg, Pair<String, String> user){
+        Server.logger.info("Executing command head");
         if (collectionManager.getCollection().isEmpty()){
             return new ExecutionStatus(false, "Коллекция пуста");
         }

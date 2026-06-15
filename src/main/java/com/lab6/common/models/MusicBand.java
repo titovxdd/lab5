@@ -157,7 +157,7 @@ public class MusicBand extends Element implements Serializable {
 
     @Override
     public int compareTo(Element o) {
-        return (int) (this.id - o.getId());
+        return (int) (Math.sqrt(Math.pow(this.coordinates.getX(),2)+Math.pow(this.coordinates.getY(),2)) - Math.sqrt(Math.pow(o.getCoordinates().getX(),2)+Math.pow(o.getCoordinates().getY(),2)));
     }
 
     public boolean validate() {

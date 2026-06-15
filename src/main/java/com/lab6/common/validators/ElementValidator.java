@@ -8,9 +8,9 @@ import com.lab6.common.Sup.Pair;
 
 public class ElementValidator {
 
-    public Pair<ExecutionStatus, MusicBand> validateAsking(Console console, Long id) {
+    public Pair<ExecutionStatus, MusicBand> validateAsking(Console console) {
         try {
-            MusicBand band = BandAsker.askBand(console, id);
+            MusicBand band = BandAsker.askBand(console);
             return validating(band);
         } catch (BandAsker.Breaker e) {
             return new Pair<>(new ExecutionStatus(false, "Ввод был прерван пользователем!"), null);

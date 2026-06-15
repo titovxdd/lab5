@@ -10,7 +10,7 @@ public class EmptyValidator extends ArgumentValidator implements Serializable {
     private static final long serialVersionUID = 106L;
 
     @Override
-    public ExecutionStatus validate(String arg) {
+    public ExecutionStatus validate(String arg, String name) {
         if (!arg.isEmpty()) {
             return new ExecutionStatus(false, "У команды нет аргументов");
         }

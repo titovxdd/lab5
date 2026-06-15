@@ -7,7 +7,7 @@ import com.lab6.server.managers.DBManager;
 
 public class Register extends Command{
     public Register(){
-        super("register", "", new EmptyValidator());
+        super("register", "регистрация пользователя", new EmptyValidator());
     }
     @Override
     public ExecutionStatus execute(String arg, Pair<String, String> user) {

@@ -18,7 +18,6 @@ public class FilterGreaterThanGenre extends Command{
     @Override
     public ExecutionStatus execute(String arg, Pair<String, String> user){
         int count = 0;
-        if (getArgumentValidator().validate(arg, getName()).isSuccess()) {
             StringBuilder s = new StringBuilder();
             for (MusicBand band : collectionManager.getCollection()) {
                 if (band.getGenre().compareTo(MusicGenre.valueOf(arg))>0){
@@ -32,8 +31,5 @@ public class FilterGreaterThanGenre extends Command{
                 s.append("Элементы успешно выведены");
                 return new ExecutionStatus(true, s.toString());
             }
-        } else {
-            return getArgumentValidator().validate(arg, getName());
-        }
     }
 }
